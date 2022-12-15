@@ -1,9 +1,9 @@
 import { apiClient } from "./httpClient";
 
-class LampsApi {
-  async getLamps() {
+class SystemsApi {
+  async getSystems() {
     try {
-      const { data } = await apiClient.get("/lamps");
+      const { data } = await apiClient.get("/systems");
 
       return data;
     } catch (err) {
@@ -12,4 +12,4 @@ class LampsApi {
   }
 }
 
-export default new LampsApi();
+export default new SystemsApi();

@@ -19,6 +19,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 const App = observer(() => {
   const {
     lampsStore: { getLamps },
+    systemsStore: { getSystems },
     userStore: { login },
   } = useStores();
 
@@ -34,8 +35,13 @@ const App = observer(() => {
       await getLamps()
     }
 
+    async function asyncGetSystems() {
+      await getSystems()
+    }
+
     asyncLogin();
     asyncGetLamps();
+    asyncGetSystems();
   }, []);
 
   return (

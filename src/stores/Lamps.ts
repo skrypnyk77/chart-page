@@ -4,12 +4,10 @@ import { observable, makeObservable, action } from "mobx";
 
 class LampsStore {
   lampsData = [];
-  lampsMeta = {};
 
   constructor() {
     makeObservable(this, {
       lampsData: observable,
-      lampsMeta: observable,
       getLamps: action,
     });
   }
@@ -18,8 +16,7 @@ class LampsStore {
     try {
       const data = await api.getLamps();
 
-      this.lampsData = data.data;
-      this.lampsMeta = data.meta;
+      this.lampsData = data;
     } catch (err) {
       console.warn(err);
     }

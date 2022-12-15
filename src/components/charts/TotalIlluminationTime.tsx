@@ -5,27 +5,43 @@ import api from "../../data/batteryApi";
 import { useStores } from "../../use-stores";
 
 import { Column } from "@ant-design/plots";
-import { Select, Typography, Space, Radio, Button, Form, Spin } from "antd";
+import { Select, Typography, Space, Radio, Button, Spin } from "antd";
+import type { RadioChangeEvent } from "antd";
 
-const { Title } = Typography;
-// const { Option } = Select;
+const { Title, Text } = Typography;
 
 export const TotalIlluminationTime = observer(() => {
   const {
     lampsStore: { lampsData },
+    systemsStore: { systemsData },
   } = useStores();
 
   const lampsDataOptions = lampsData?.map((item: any) => {
     return {
-      value: item.attributes._id,
-      label: item.attributes.name,
+      value: item.id,
+      label: item.name,
       ...item,
     };
   });
 
+  const systemsDataOptions = systemsData?.map((item: any) => {
+    return {
+      value: item.id,
+      label: item.name,
+      ...item,
+    };
+  });
+
+  const defaultFilters = {
+    detalization: "1w",
+    ["date[start]"]: "2022-11-10",
+    ["date[end]"]: "2022-12-10",
+  };
+
   const [batteryLevelLoading, setBatteryLevelLoading] = useState(false);
+
   const [batteryLevel, setBatteryLevel] = useState([]);
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({ ...defaultFilters });
 
   useEffect(() => {
     async function asyncGetBatteryLevel() {
@@ -33,9 +49,7 @@ export const TotalIlluminationTime = observer(() => {
 
       try {
         const data = await api.getBatteryLevel({
-          detalization: "1d",
-          ["date[start]"]: "2022-11-10",
-          ["date[end]"]: "2022-12-10",
+          ...defaultFilters,
         });
 
         setBatteryLevel(data);
@@ -62,47 +76,131 @@ export const TotalIlluminationTime = observer(() => {
     },
   };
 
-  const handleChangeLamps = (value) => {
-    console.log(value);
+  const handleChangeLamps = (value: string[]) => {
+    setFilters({
+      ...filters,
+      lamps: value && value.length > 0 ? value : undefined,
+    });
+  };
 
-    setFilters({ lamps: value && value.length > 0 ? value : undefined });
+  const handleChangeSystems = (value: string[]) => {
+    setFilters({
+      ...filters,
+      system: value && value.length > 0 ? value : undefined,
+    });
+  };
+
+  const onDetalizationChange = (event: RadioChangeEvent) => {
+    setFilters({
+      ...filters,
+      detalization: event.target.value,
+    });
+  };
+
+  const submitFilters = async () => {
+    setBatteryLevelLoading(true);
+
+    try {
+      const data = await api.getBatteryLevel({
+        ...filters,
+      });
+
+      setBatteryLevel(data);
+    } catch (error) {
+      console.warn(error);
+    }
+
+    setBatteryLevelLoading(false);
+  };
+
+  const resetFilters = async () => {
+    setBatteryLevelLoading(true);
+
+    setFilters({ ...defaultFilters });
+
+    try {
+      const data = await api.getBatteryLevel({
+        ...defaultFilters,
+        lamps: undefined,
+        system: undefined,
+      });
+
+      setBatteryLevel(data);
+    } catch (err) {
+      console.log(err);
+    }
+
+    setBatteryLevelLoading(false);
   };
 
   return (
     <>
-      <Title>Battery Level</Title>
+      <Title style={{ marginBottom: "24px" }}>Battery Level</Title>
 
-      <Space style={{ width: "100%" }}>
-        <Form
-          labelCol={{ span: 6 }}
-          wrapperCol={{ span: 14 }}
-          layout="horizontal"
-          // onValuesChange={onFormLayoutChange}
+      <Space style={{ marginBottom: "24px" }}>
+        <Text>Detalization</Text>
+        <Radio.Group
+          defaultValue="1w"
+          buttonStyle="solid"
+          value={filters.detalization || undefined}
+          onChange={onDetalizationChange}
         >
-          {/* <Form.Item label="Form Size" name="size">
-            <Radio.Group>
-              <Radio.Button value="small">Small</Radio.Button>
-              <Radio.Button value="default">Default</Radio.Button>
-              <Radio.Button value="large">Large</Radio.Button>
-            </Radio.Group>
-          </Form.Item> */}
+          <Radio.Button defaultChecked value="1w">
+            Week
+          </Radio.Button>
+          <Radio.Button value="1d">Day</Radio.Button>
+          <Radio.Button value="1h">Hour</Radio.Button>
+        </Radio.Group>
+      </Space>
 
-          {/* <Form.Item label="Lamps">
-            <Select
-              mode="multiple"
-              style={{
-                width: "300px",
-                flex: 1,
-              }}
-              options={lampsDataOptions}
-              placeholder="Select Lamp(s)"
-              onChange={handleChangeLamps}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary">Search</Button>
-          </Form.Item> */}
-        </Form>
+      <Space style={{ marginBottom: "24px" }}>
+        <Text>Lamps...</Text>
+        <Select
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) => (option?.name ?? "").includes(input)}
+          mode="multiple"
+          style={{
+            width: "360px",
+            flex: 1,
+          }}
+          value={filters.lamps || undefined}
+          options={lampsDataOptions}
+          placeholder="Select Lamp(s)"
+          onChange={handleChangeLamps}
+        />
+      </Space>
+
+      <Space style={{ marginBottom: "24px" }}>
+        <Text>Systems</Text>
+        <Select
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) => (option?.name ?? "").includes(input)}
+          mode="multiple"
+          style={{
+            width: "360px",
+            flex: 1,
+          }}
+          value={filters.system || undefined}
+          options={systemsDataOptions}
+          placeholder="Select Systems(s)"
+          onChange={handleChangeSystems}
+        />
+      </Space>
+
+      <Space>
+        <Button style={{ width: "100px" }} onClick={resetFilters}>
+          Reset
+        </Button>
+
+        <Button
+          type="primary"
+          style={{ width: "100px" }}
+          onClick={submitFilters}
+        >
+          Search
+        </Button>
       </Space>
 
       <br />
