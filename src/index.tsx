@@ -18,6 +18,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const App = observer(() => {
   const {
+    groupsStore: { getGroups },
     lampsStore: { getLamps },
     systemsStore: { getSystems },
     userStore: { login },
@@ -32,15 +33,20 @@ const App = observer(() => {
     }
 
     async function asyncGetLamps() {
-      await getLamps()
+      await getLamps();
+    }
+
+    async function asyncGetGroups() {
+      await getGroups();
     }
 
     async function asyncGetSystems() {
-      await getSystems()
+      await getSystems();
     }
 
     asyncLogin();
     asyncGetLamps();
+    asyncGetGroups();
     asyncGetSystems();
   }, []);
 
