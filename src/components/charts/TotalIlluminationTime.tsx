@@ -14,7 +14,7 @@ import {
   Spin,
   DatePicker,
 } from "antd";
-import dayjs, { Dayjs } from "dayjs";
+import moment, { Moment } from "moment";
 import type { RadioChangeEvent } from "antd";
 
 const { Title, Text } = Typography;
@@ -55,8 +55,8 @@ export const TotalIlluminationTime = observer(() => {
 
   const defaultFilters = {
     detalization: "1d",
-    ["date[start]"]: dayjs().add(-1, "month").format(dateTimeFormat),
-    ["date[end]"]: dayjs(new Date()).format(dateTimeFormat),
+    ["date[start]"]: moment().add(-1, "month").format(dateTimeFormat),
+    ["date[end]"]: moment(new Date()).format(dateTimeFormat),
   };
 
   const [batteryLevelLoading, setBatteryLevelLoading] = useState(false);
@@ -129,8 +129,9 @@ export const TotalIlluminationTime = observer(() => {
     });
   };
 
+  //date[from/to] filter
   const onDateFromChange = (
-    value: [Dayjs, Dayjs] | null,
+    value: [Moment, Moment],
     dateString: [string, string]
   ): void => {
     if (value === null) {
@@ -159,7 +160,7 @@ export const TotalIlluminationTime = observer(() => {
 
       setBatteryLevel(data);
     } catch (error) {
-      console.warn(error);
+      console.log(error);
     }
 
     setBatteryLevelLoading(false);
@@ -169,13 +170,16 @@ export const TotalIlluminationTime = observer(() => {
   const resetFilters = async (): Promise<void> => {
     setBatteryLevelLoading(true);
 
-    setFilters({ ...defaultFilters });
-
     try {
+      setFilters({
+        ...defaultFilters,
+        groups: undefined,
+        lamps: undefined,
+        system: undefined,
+      });
+
       const data = await api.getBatteryLevel({
         ...defaultFilters,
-        ["date[start]"]: defaultFilters["date[start]"],
-        ["date[end]"]: defaultFilters["date[end]"],
         groups: undefined,
         lamps: undefined,
         system: undefined,
@@ -193,7 +197,7 @@ export const TotalIlluminationTime = observer(() => {
     <>
       <Title style={{ marginBottom: "24px" }}>Battery Level</Title>
 
-      <Space style={{ marginBottom: "24px" }}>
+      <Space style={{ marginBottom: "16px" }}>
         <Text style={{ width: "100px", display: "block" }}>Detalization</Text>
         <Radio.Group
           defaultValue="1w"
@@ -209,7 +213,7 @@ export const TotalIlluminationTime = observer(() => {
         </Radio.Group>
       </Space>
 
-      <Space style={{ marginBottom: "24px" }}>
+      <Space style={{ marginBottom: "16px" }}>
         <Text style={{ width: "100px", display: "block" }}>Date [From/To]</Text>
         <RangePicker
           style={{
@@ -217,17 +221,17 @@ export const TotalIlluminationTime = observer(() => {
             flex: 1,
           }}
           showTime
-          placeholder={["Start Date", "End Date"]}
-          // defaultValue={[
-          //   dayjs(defaultFilters["date[start]"], dateTimeFormat),
-          //   dayjs(defaultFilters["date[end]"], dateTimeFormat),
-          // ]}
           format={dateTimeFormat}
+          placeholder={["Start Date", "End Date"]}
+          value={[
+            moment(filters["date[start]"], dateTimeFormat),
+            moment(filters["date[end]"], dateTimeFormat),
+          ]}
           onChange={onDateFromChange}
         />
       </Space>
 
-      <Space style={{ marginBottom: "24px" }}>
+      <Space style={{ marginBottom: "16px" }}>
         <Text style={{ width: "100px", display: "block" }}>Groups</Text>
         <Select
           showSearch
@@ -245,7 +249,7 @@ export const TotalIlluminationTime = observer(() => {
         />
       </Space>
 
-      <Space style={{ marginBottom: "24px" }}>
+      <Space style={{ marginBottom: "16px" }}>
         <Text style={{ width: "100px", display: "block" }}>Lamps</Text>
         <Select
           showSearch
@@ -263,7 +267,7 @@ export const TotalIlluminationTime = observer(() => {
         />
       </Space>
 
-      <Space style={{ marginBottom: "24px" }}>
+      <Space style={{ marginBottom: "16px" }}>
         <Text style={{ width: "100px", display: "block" }}>Systems</Text>
         <Select
           showSearch
