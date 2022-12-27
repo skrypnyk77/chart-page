@@ -9,8 +9,8 @@ import store from "./stores";
 import "antd/dist/antd.css";
 
 // import { DeviceAvailability } from "./components/charts/DeviceAvailability";
-// import { LampOperation } from "./components/charts/LampOperation";
-import { TotalIlluminationTime } from "./components/charts/TotalIlluminationTime";
+import { BatteryLevel } from "./components/charts/BatteryLevel";
+import { Temperature } from "./components/charts/Temperature";
 
 import { Layout } from "antd";
 
@@ -52,9 +52,10 @@ const App = observer(() => {
 
   return (
     <Layout style={{ padding: "20px" }}>
-      {/* <DeviceAvailability />
-      <LampOperation /> */}
-      <TotalIlluminationTime />
+      <BatteryLevel />
+      <br />
+      <br />  
+      <Temperature />
     </Layout>
   );
 });

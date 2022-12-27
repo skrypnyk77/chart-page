@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import api from "../../data/batteryApi";
+import api from "../../data/temperatureApi";
 
 import { useStores } from "../../use-stores";
 
@@ -22,7 +22,7 @@ const { RangePicker } = DatePicker;
 
 const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 
-export const TotalIlluminationTime = observer(() => {
+export const Temperature = observer(() => {
   const {
     groupsStore: { groupsData },
     lampsStore: { lampsData },
@@ -59,17 +59,17 @@ export const TotalIlluminationTime = observer(() => {
     ["date[end]"]: moment(new Date()).format(dateTimeFormat),
   };
 
-  const [batteryLevelLoading, setBatteryLevelLoading] = useState(false);
+  const [temperatureLoading, setTemperatureLoading] = useState(false);
 
   const [batteryLevel, setBatteryLevel] = useState([]);
   const [filters, setFilters] = useState({ ...defaultFilters });
 
   useEffect(() => {
-    async function asyncGetBatteryLevel() {
-      setBatteryLevelLoading(true);
+    async function asyncGetTemperature() {
+      setTemperatureLoading(true);
 
       try {
-        const data = await api.getBatteryLevel({
+        const data = await api.getTemperature({
           ...defaultFilters,
         });
 
@@ -78,16 +78,16 @@ export const TotalIlluminationTime = observer(() => {
         console.log(err);
       }
 
-      setBatteryLevelLoading(false);
+      setTemperatureLoading(false);
     }
 
-    asyncGetBatteryLevel();
+    asyncGetTemperature();
   }, []);
 
   const config = {
     data: batteryLevel,
     xField: "date",
-    yField: "batteryLevel",
+    yField: "temperature",
     columnWidthRatio: 0.8,
     xAxis: {
       label: {
@@ -101,7 +101,7 @@ export const TotalIlluminationTime = observer(() => {
   const handleChangeGroups = (value: string[]): void => {
     setFilters({
       ...filters,
-      groups: value && value.length > 0 ? value : undefined,
+      group: value && value.length > 0 ? value : undefined,
     });
   };
 
@@ -151,10 +151,10 @@ export const TotalIlluminationTime = observer(() => {
 
   //submit filters
   const submitFilters = async (): Promise<void> => {
-    setBatteryLevelLoading(true);
+    setTemperatureLoading(true);
 
     try {
-      const data = await api.getBatteryLevel({
+      const data = await api.getTemperature({
         ...filters,
       });
 
@@ -163,24 +163,24 @@ export const TotalIlluminationTime = observer(() => {
       console.log(error);
     }
 
-    setBatteryLevelLoading(false);
+    setTemperatureLoading(false);
   };
 
   //reset filters
   const resetFilters = async (): Promise<void> => {
-    setBatteryLevelLoading(true);
+    setTemperatureLoading(true);
 
     try {
       setFilters({
         ...defaultFilters,
-        groups: undefined,
+        group: undefined,
         lamp: undefined,
         system: undefined,
       });
 
-      const data = await api.getBatteryLevel({
+      const data = await api.getTemperature({
         ...defaultFilters,
-        groups: undefined,
+        group: undefined,
         lamp: undefined,
         system: undefined,
       });
@@ -190,17 +190,17 @@ export const TotalIlluminationTime = observer(() => {
       console.log(err);
     }
 
-    setBatteryLevelLoading(false);
+    setTemperatureLoading(false);
   };
 
   return (
     <>
-      <Title style={{ marginBottom: "24px" }}>Battery Level</Title>
+      <Title style={{ marginBottom: "24px" }}>Temperature</Title>
 
       <Space style={{ marginBottom: "16px" }}>
         <Text style={{ width: "100px", display: "block" }}>Detalization</Text>
         <Radio.Group
-          defaultValue="1w"
+          defaultValue="1d"
           buttonStyle="solid"
           value={filters.detalization || undefined}
           onChange={onDetalizationChange}
@@ -208,7 +208,6 @@ export const TotalIlluminationTime = observer(() => {
           <Radio.Button defaultChecked value="1d">
             Day
           </Radio.Button>
-          <Radio.Button value="1w">Week</Radio.Button>
           <Radio.Button value="1h">Hour</Radio.Button>
         </Radio.Group>
       </Space>
@@ -242,7 +241,7 @@ export const TotalIlluminationTime = observer(() => {
             width: "360px",
             flex: 1,
           }}
-          value={filters.groups || undefined}
+          value={filters.group || undefined}
           options={groupsDataOptions}
           placeholder="Select Group(s)"
           onChange={handleChangeGroups}
@@ -301,7 +300,7 @@ export const TotalIlluminationTime = observer(() => {
 
       <br />
 
-      {batteryLevelLoading ? (
+      {temperatureLoading ? (
         <Spin tip="Loading...">
           <Column {...config} />
         </Spin>
