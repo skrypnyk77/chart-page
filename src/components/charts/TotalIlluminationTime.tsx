@@ -109,7 +109,7 @@ export const TotalIlluminationTime = observer(() => {
   const handleChangeLamps = (value: string[]): void => {
     setFilters({
       ...filters,
-      lamps: value && value.length > 0 ? value : undefined,
+      lamp: value && value.length > 0 ? value : undefined,
     });
   };
 
@@ -174,14 +174,14 @@ export const TotalIlluminationTime = observer(() => {
       setFilters({
         ...defaultFilters,
         groups: undefined,
-        lamps: undefined,
+        lamp: undefined,
         system: undefined,
       });
 
       const data = await api.getBatteryLevel({
         ...defaultFilters,
         groups: undefined,
-        lamps: undefined,
+        lamp: undefined,
         system: undefined,
       });
 
@@ -260,7 +260,7 @@ export const TotalIlluminationTime = observer(() => {
             width: "360px",
             flex: 1,
           }}
-          value={filters.lamps || undefined}
+          value={filters.lamp || undefined}
           options={lampsDataOptions}
           placeholder="Select Lamp(s)"
           onChange={handleChangeLamps}
