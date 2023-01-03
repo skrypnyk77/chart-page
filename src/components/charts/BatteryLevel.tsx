@@ -149,6 +149,34 @@ export const BatteryLevel = observer(() => {
     }
   };
 
+  const onQuickPresetChange = (preset: string) => {
+    if (preset === "day") {
+      setFilters({
+        ...filters,
+        ["date[start]"]: moment().add(-1, "day").format(dateTimeFormat),
+        ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+      });
+    } else if (preset === "week") {
+      setFilters({
+        ...filters,
+        ["date[start]"]: moment().add(-7, "day").format(dateTimeFormat),
+        ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+      });
+    } else if (preset === "month") {
+      setFilters({
+        ...filters,
+        ["date[start]"]: moment().add(-1, "month").format(dateTimeFormat),
+        ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+      });
+    } else if (preset === "quarter") {
+      setFilters({
+        ...filters,
+        ["date[start]"]: moment().add(-3, "month").format(dateTimeFormat),
+        ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+      });
+    }
+  };
+
   //submit filters
   const submitFilters = async (): Promise<void> => {
     setBatteryLevelLoading(true);
@@ -200,15 +228,15 @@ export const BatteryLevel = observer(() => {
       <Space style={{ marginBottom: "16px" }}>
         <Text style={{ width: "100px", display: "block" }}>Detalization</Text>
         <Radio.Group
-          defaultValue="1w"
+          defaultValue="1d"
           buttonStyle="solid"
           value={filters.detalization || undefined}
           onChange={onDetalizationChange}
         >
+          <Radio.Button value="1w">Week</Radio.Button>
           <Radio.Button defaultChecked value="1d">
             Day
           </Radio.Button>
-          <Radio.Button value="1w">Week</Radio.Button>
           <Radio.Button value="1h">Hour</Radio.Button>
         </Radio.Group>
       </Space>
@@ -220,7 +248,23 @@ export const BatteryLevel = observer(() => {
             width: "360px",
             flex: 1,
           }}
-          showTime
+          renderExtraFooter={() => (
+            <Space>
+              <Button
+                size="small"
+                type="primary"
+                onClick={() => onQuickPresetChange("day")}
+              >
+                Today
+              </Button>
+              <Button size="small" onClick={() => onQuickPresetChange("week")}>This Week</Button>
+              <Button size="small" type="primary" onClick={() => onQuickPresetChange("month")}>
+                This Month
+              </Button>
+              <Button size="small" onClick={() => onQuickPresetChange("quarter")}>90 Days</Button>
+            </Space>
+          )}
+          showTime={filters.detalization === "1h" ? true : false}
           format={dateTimeFormat}
           placeholder={["Start Date", "End Date"]}
           value={[
@@ -228,6 +272,24 @@ export const BatteryLevel = observer(() => {
             moment(filters["date[end]"], dateTimeFormat),
           ]}
           onChange={onDateFromChange}
+        />
+      </Space>
+
+      <Space style={{ marginBottom: "16px" }}>
+        <Text style={{ width: "100px", display: "block" }}>Systems</Text>
+        <Select
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) => (option?.name ?? "").includes(input)}
+          mode="multiple"
+          style={{
+            width: "360px",
+            flex: 1,
+          }}
+          value={filters.system || undefined}
+          options={systemsDataOptions}
+          placeholder="Select Systems(s)"
+          onChange={handleChangeSystems}
         />
       </Space>
 
@@ -264,24 +326,6 @@ export const BatteryLevel = observer(() => {
           options={lampsDataOptions}
           placeholder="Select Lamp(s)"
           onChange={handleChangeLamps}
-        />
-      </Space>
-
-      <Space style={{ marginBottom: "16px" }}>
-        <Text style={{ width: "100px", display: "block" }}>Systems</Text>
-        <Select
-          showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) => (option?.name ?? "").includes(input)}
-          mode="multiple"
-          style={{
-            width: "360px",
-            flex: 1,
-          }}
-          value={filters.system || undefined}
-          options={systemsDataOptions}
-          placeholder="Select Systems(s)"
-          onChange={handleChangeSystems}
         />
       </Space>
 

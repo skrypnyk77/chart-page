@@ -61,7 +61,7 @@ export const Temperature = observer(() => {
 
   const [temperatureLoading, setTemperatureLoading] = useState(false);
 
-  const [batteryLevel, setBatteryLevel] = useState([]);
+  const [temperature, setTemperature] = useState([]);
   const [filters, setFilters] = useState({ ...defaultFilters });
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export const Temperature = observer(() => {
           ...defaultFilters,
         });
 
-        setBatteryLevel(data);
+        setTemperature(data);
       } catch (err) {
         console.log(err);
       }
@@ -85,7 +85,7 @@ export const Temperature = observer(() => {
   }, []);
 
   const config = {
-    data: batteryLevel,
+    data: temperature,
     xField: "date",
     yField: "temperature",
     columnWidthRatio: 0.8,
@@ -149,6 +149,34 @@ export const Temperature = observer(() => {
     }
   };
 
+  const onQuickPresetChange = (preset: string) => {
+    if (preset === "day") {
+      setFilters({
+        ...filters,
+        ["date[start]"]: moment().add(-1, "day").format(dateTimeFormat),
+        ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+      });
+    } else if (preset === "week") {
+      setFilters({
+        ...filters,
+        ["date[start]"]: moment().add(-7, "day").format(dateTimeFormat),
+        ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+      });
+    } else if (preset === "month") {
+      setFilters({
+        ...filters,
+        ["date[start]"]: moment().add(-1, "month").format(dateTimeFormat),
+        ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+      });
+    } else if (preset === "quarter") {
+      setFilters({
+        ...filters,
+        ["date[start]"]: moment().add(-3, "month").format(dateTimeFormat),
+        ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+      });
+    }
+  };
+
   //submit filters
   const submitFilters = async (): Promise<void> => {
     setTemperatureLoading(true);
@@ -158,7 +186,7 @@ export const Temperature = observer(() => {
         ...filters,
       });
 
-      setBatteryLevel(data);
+      setTemperature(data);
     } catch (error) {
       console.log(error);
     }
@@ -185,7 +213,7 @@ export const Temperature = observer(() => {
         system: undefined,
       });
 
-      setBatteryLevel(data);
+      setTemperature(data);
     } catch (err) {
       console.log(err);
     }
@@ -205,6 +233,7 @@ export const Temperature = observer(() => {
           value={filters.detalization || undefined}
           onChange={onDetalizationChange}
         >
+          <Radio.Button value="1w">Week</Radio.Button>
           <Radio.Button defaultChecked value="1d">
             Day
           </Radio.Button>
@@ -219,7 +248,23 @@ export const Temperature = observer(() => {
             width: "360px",
             flex: 1,
           }}
-          showTime
+          renderExtraFooter={() => (
+            <Space>
+              <Button
+                size="small"
+                type="primary"
+                onClick={() => onQuickPresetChange("day")}
+              >
+                Today
+              </Button>
+              <Button size="small" onClick={() => onQuickPresetChange("week")}>This Week</Button>
+              <Button size="small" type="primary" onClick={() => onQuickPresetChange("month")}>
+                This Month
+              </Button>
+              <Button size="small" onClick={() => onQuickPresetChange("quarter")}>90 Days</Button>
+            </Space>
+          )}
+          showTime={filters.detalization === '1h' ? true : false}
           format={dateTimeFormat}
           placeholder={["Start Date", "End Date"]}
           value={[
@@ -227,6 +272,24 @@ export const Temperature = observer(() => {
             moment(filters["date[end]"], dateTimeFormat),
           ]}
           onChange={onDateFromChange}
+        />
+      </Space>
+
+      <Space style={{ marginBottom: "16px" }}>
+        <Text style={{ width: "100px", display: "block" }}>Systems</Text>
+        <Select
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) => (option?.name ?? "").includes(input)}
+          mode="multiple"
+          style={{
+            width: "360px",
+            flex: 1,
+          }}
+          value={filters.system || undefined}
+          options={systemsDataOptions}
+          placeholder="Select Systems(s)"
+          onChange={handleChangeSystems}
         />
       </Space>
 
@@ -263,24 +326,6 @@ export const Temperature = observer(() => {
           options={lampsDataOptions}
           placeholder="Select Lamp(s)"
           onChange={handleChangeLamps}
-        />
-      </Space>
-
-      <Space style={{ marginBottom: "16px" }}>
-        <Text style={{ width: "100px", display: "block" }}>Systems</Text>
-        <Select
-          showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) => (option?.name ?? "").includes(input)}
-          mode="multiple"
-          style={{
-            width: "360px",
-            flex: 1,
-          }}
-          value={filters.system || undefined}
-          options={systemsDataOptions}
-          placeholder="Select Systems(s)"
-          onChange={handleChangeSystems}
         />
       </Space>
 
