@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import api from "../../data/batteryApi";
+import batteryApi from "../../data/batteryApi";
+import systemsApi from "../../data/systemsApi";
 
 import { useStores } from "../../use-stores";
 
@@ -69,7 +70,7 @@ export const BatteryLevel = observer(() => {
       setBatteryLevelLoading(true);
 
       try {
-        const data = await api.getBatteryLevel({
+        const data = await batteryApi.getBatteryLevel({
           ...defaultFilters,
         });
 
@@ -114,11 +115,34 @@ export const BatteryLevel = observer(() => {
   };
 
   // systems filter
-  const handleChangeSystems = (value: string[]): void => {
-    setFilters({
-      ...filters,
-      system: value && value.length > 0 ? value : undefined,
-    });
+  const handleChangeSystems = async (value: number): Promise<void> => {
+    try {
+      const systemData = await systemsApi.getSystemById(value);
+
+      let lampIds = [];
+      let groupIds = [];
+
+      if (systemData.lamps) {
+        systemData.lamps.forEach((item: any) => {
+          lampIds.push(item.id);
+        });
+      }
+
+      if (systemData.groups_info) {
+        systemData.groups_info.forEach((item: any) => {
+          groupIds.push(item.group.id);
+        });
+      }
+
+      setFilters({
+        ...filters,
+        system: value ? value : undefined,
+        lamp: lampIds,
+        group: groupIds,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // detalization filter
@@ -182,7 +206,7 @@ export const BatteryLevel = observer(() => {
     setBatteryLevelLoading(true);
 
     try {
-      const data = await api.getBatteryLevel({
+      const data = await batteryApi.getBatteryLevel({
         ...filters,
       });
 
@@ -206,7 +230,7 @@ export const BatteryLevel = observer(() => {
         system: undefined,
       });
 
-      const data = await api.getBatteryLevel({
+      const data = await batteryApi.getBatteryLevel({
         ...defaultFilters,
         group: undefined,
         lamp: undefined,
@@ -257,11 +281,22 @@ export const BatteryLevel = observer(() => {
               >
                 Today
               </Button>
-              <Button size="small" onClick={() => onQuickPresetChange("week")}>This Week</Button>
-              <Button size="small" type="primary" onClick={() => onQuickPresetChange("month")}>
-                This Month
+              <Button size="small" onClick={() => onQuickPresetChange("week")}>
+                7 Days
               </Button>
-              <Button size="small" onClick={() => onQuickPresetChange("quarter")}>90 Days</Button>
+              <Button
+                size="small"
+                type="primary"
+                onClick={() => onQuickPresetChange("month")}
+              >
+                30 Days
+              </Button>
+              <Button
+                size="small"
+                onClick={() => onQuickPresetChange("quarter")}
+              >
+                90 Days
+              </Button>
             </Space>
           )}
           showTime={filters.detalization === "1h" ? true : false}
@@ -281,7 +316,6 @@ export const BatteryLevel = observer(() => {
           showSearch
           optionFilterProp="children"
           filterOption={(input, option) => (option?.name ?? "").includes(input)}
-          mode="multiple"
           style={{
             width: "360px",
             flex: 1,

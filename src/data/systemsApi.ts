@@ -10,6 +10,16 @@ class SystemsApi {
       console.warn(err);
     }
   }
+
+  async getSystemById(id: number) {
+    try {
+      const { data } = await apiClient.get(`/systems/${id}`);
+
+      return data;
+    } catch (err) {
+      console.warn(err);
+    }
+  }
 }
 
 export default new SystemsApi();
