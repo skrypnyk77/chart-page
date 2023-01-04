@@ -274,21 +274,13 @@ export const BatteryLevel = observer(() => {
           }}
           renderExtraFooter={() => (
             <Space>
-              <Button
-                size="small"
-                type="primary"
-                onClick={() => onQuickPresetChange("day")}
-              >
-                Today
+              <Button size="small" onClick={() => onQuickPresetChange("day")}>
+                Day
               </Button>
               <Button size="small" onClick={() => onQuickPresetChange("week")}>
                 7 Days
               </Button>
-              <Button
-                size="small"
-                type="primary"
-                onClick={() => onQuickPresetChange("month")}
-              >
+              <Button size="small" onClick={() => onQuickPresetChange("month")}>
                 30 Days
               </Button>
               <Button
@@ -355,6 +347,8 @@ export const BatteryLevel = observer(() => {
           style={{
             width: "360px",
             flex: 1,
+            overflowY: "auto",
+            maxHeight: "172px",
           }}
           value={filters.lamp || undefined}
           options={lampsDataOptions}

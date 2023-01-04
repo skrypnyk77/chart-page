@@ -3,7 +3,7 @@ import { apiClient } from "./httpClient";
 class LampsApi {
   async getLamps() {
     try {
-      const { data } = await apiClient.get("/lamps");
+      const { data } = await apiClient.get("/lamps/all");
 
       return data;
     } catch (err) {
