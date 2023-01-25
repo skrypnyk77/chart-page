@@ -9,6 +9,7 @@ import store from "./stores";
 import "antd/dist/antd.css";
 
 // import { DeviceAvailability } from "./components/charts/DeviceAvailability";
+import Auth from "./components/auth/Auth";
 import { BatteryLevel } from "./components/charts/BatteryLevel";
 import { Temperature } from "./components/charts/Temperature";
 
@@ -21,16 +22,16 @@ const App = observer(() => {
     groupsStore: { getGroups },
     lampsStore: { getLamps },
     systemsStore: { getSystems },
-    userStore: { login },
+    userStore: { token },
   } = useStores();
 
   useEffect(() => {
-    async function asyncLogin() {
-      await login({
-        login: "admin",
-        password: "Qwerty123",
-      });
-    }
+    // async function asyncLogin() {
+    //   await login({
+    //     login: "admin",
+    //     password: "Qwerty123",
+    //   });
+    // }
 
     async function asyncGetLamps() {
       await getLamps();
@@ -44,17 +45,19 @@ const App = observer(() => {
       await getSystems();
     }
 
-    asyncLogin();
+    // asyncLogin();
     asyncGetLamps();
     asyncGetGroups();
     asyncGetSystems();
   }, []);
 
-  return (
+  return !token ? (
+    <Auth />
+  ) : (
     <Layout style={{ padding: "20px" }}>
       <BatteryLevel />
       <br />
-      <br />  
+      <br />
       <Temperature />
     </Layout>
   );
