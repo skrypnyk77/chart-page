@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "antd": "^4.23.6",
     "axios": "^1.2.0",
+    "http-proxy-middleware": "^2.0.6",
     "mobx": "^6.7.0",
     "mobx-react": "^7.6.0",
     "moment": "^2.29.4",

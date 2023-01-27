@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 
 import { Provider, observer } from "mobx-react";
@@ -8,59 +8,17 @@ import store from "./stores";
 
 import "antd/dist/antd.css";
 
-// import { DeviceAvailability } from "./components/charts/DeviceAvailability";
 import Auth from "./components/auth/Auth";
-import { BatteryLevel } from "./components/charts/BatteryLevel";
-import { Temperature } from "./components/charts/Temperature";
-
-import { Layout } from "antd";
+import MainLayout from "./components/MainLayout";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const App = observer(() => {
   const {
-    groupsStore: { getGroups },
-    lampsStore: { getLamps },
-    systemsStore: { getSystems },
-    userStore: { token },
+    userStore: { isLogged },
   } = useStores();
 
-  useEffect(() => {
-    // async function asyncLogin() {
-    //   await login({
-    //     login: "admin",
-    //     password: "Qwerty123",
-    //   });
-    // }
-
-    async function asyncGetLamps() {
-      await getLamps();
-    }
-
-    async function asyncGetGroups() {
-      await getGroups();
-    }
-
-    async function asyncGetSystems() {
-      await getSystems();
-    }
-
-    // asyncLogin();
-    asyncGetLamps();
-    asyncGetGroups();
-    asyncGetSystems();
-  }, []);
-
-  return !token ? (
-    <Auth />
-  ) : (
-    <Layout style={{ padding: "20px" }}>
-      <BatteryLevel />
-      <br />
-      <br />
-      <Temperature />
-    </Layout>
-  );
+  return isLogged ? <MainLayout /> : <Auth />;
 });
 
 root.render(
