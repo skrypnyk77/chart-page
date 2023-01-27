@@ -23,7 +23,7 @@ const { RangePicker } = DatePicker;
 
 const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 
-export const Temperature = observer(() => {
+export const Temperature = observer(({ system }) => {
   const {
     groupsStore: { groupsData },
     lampsStore: { lampsData },
@@ -46,18 +46,11 @@ export const Temperature = observer(() => {
     };
   });
 
-  const systemsDataOptions = systemsData?.map((item: any) => {
-    return {
-      value: item.id,
-      label: item.name,
-      ...item,
-    };
-  });
-
   const defaultFilters = {
     detalization: "1d",
     ["date[start]"]: moment().add(-1, "month").format(dateTimeFormat),
     ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+    system: system,
   };
 
   const [temperatureLoading, setTemperatureLoading] = useState(false);
@@ -112,37 +105,6 @@ export const Temperature = observer(() => {
       ...filters,
       lamp: value && value.length > 0 ? value : undefined,
     });
-  };
-
-  // systems filter
-  const handleChangeSystems = async (value: number): Promise<void> => {
-    try {
-      const systemData = await systemsApi.getSystemById(value);
-
-      let lampIds = [];
-      let groupIds = [];
-
-      if (systemData.lamps) {
-        systemData.lamps.forEach((item: any) => {
-          lampIds.push(item.id);
-        });
-      }
-
-      if (systemData.groups_info) {
-        systemData.groups_info.forEach((item: any) => {
-          groupIds.push(item.group.id);
-        });
-      }
-
-      setFilters({
-        ...filters,
-        system: value ? value : undefined,
-        lamp: lampIds,
-        group: groupIds,
-      });
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   // detalization filter
@@ -227,14 +189,12 @@ export const Temperature = observer(() => {
         ...defaultFilters,
         group: undefined,
         lamp: undefined,
-        system: undefined,
       });
 
       const data = await temperatureApi.getTemperature({
         ...defaultFilters,
         group: undefined,
         lamp: undefined,
-        system: undefined,
       });
 
       setTemperature(data);
@@ -299,23 +259,6 @@ export const Temperature = observer(() => {
             moment(filters["date[end]"], dateTimeFormat),
           ]}
           onChange={onDateFromChange}
-        />
-      </Space>
-
-      <Space style={{ marginBottom: "16px" }}>
-        <Text style={{ width: "100px", display: "block" }}>Systems</Text>
-        <Select
-          showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) => (option?.name ?? "").includes(input)}
-          style={{
-            width: "360px",
-            flex: 1,
-          }}
-          value={filters.system || undefined}
-          options={systemsDataOptions}
-          placeholder="Select Systems(s)"
-          onChange={handleChangeSystems}
         />
       </Space>
 

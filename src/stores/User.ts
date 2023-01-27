@@ -4,7 +4,7 @@ import { observable, makeObservable, action } from "mobx";
 
 class UserStore {
   authError = "";
-  isLogged = true;
+  isLogged = false;
 
   constructor() {
     makeObservable(this, {

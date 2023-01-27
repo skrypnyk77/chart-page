@@ -2,19 +2,17 @@ import React from "react";
 import { Layout, Button, Form, Input, Divider } from "antd";
 
 import { observer } from "mobx-react";
+import { useNavigate } from "react-router-dom";
 import { useStores } from "../../use-stores";
-
-type NotificationType = "success" | "error";
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
 };
 
 const Auth = observer(() => {
+  const navigate = useNavigate();
+
   const {
-    // groupsStore: { getGroups },
-    // lampsStore: { getLamps },
-    // systemsStore: { getSystems },
     userStore: { login, authError },
   } = useStores();
 
@@ -22,6 +20,8 @@ const Auth = observer(() => {
     console.log("onFinish:", values);
 
     await login({ ...values });
+
+    navigate(`/systems`);
   };
 
   return (
@@ -55,11 +55,7 @@ const Auth = observer(() => {
         </Form.Item>
 
         <Form.Item>
-          {authError ? (
-            <p style={{ color: "#ff4d4f" }}>{authError}</p>
-          ) : (
-            ""
-          )}
+          {authError ? <p style={{ color: "#ff4d4f" }}>{authError}</p> : ""}
           <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
             Submit
           </Button>
