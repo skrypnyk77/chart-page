@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import batteryApi from "../../data/batteryApi";
+import illuminationApi from "../../data/illuminationApi";
 import systemsApi from "../../data/systemsApi";
 
 import { useStores } from "../../use-stores";
 
-import { Column } from "@ant-design/plots";
+import { DualAxes } from "@ant-design/plots";
 import {
   Select,
   Typography,
@@ -23,10 +23,9 @@ const { RangePicker } = DatePicker;
 
 const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 
-export const BatteryLevel = observer(({ system }) => {
+export const IlluminationDuration = observer(({ system }) => {
   const {
     groupsStore: { groupsData },
-    lampsStore: { lampsData }
   } = useStores();
 
   const groupsDataOptions = groupsData?.map((item: any) => {
@@ -37,59 +36,58 @@ export const BatteryLevel = observer(({ system }) => {
     };
   });
 
-  const lampsDataOptions = lampsData?.map((item: any) => {
-    return {
-      value: item.id,
-      label: item.name,
-      ...item,
-    };
-  });
-
   const defaultFilters = {
-    detalization: "1d",
+    detalization: "1h",
+    mode: "total",
     ["date[start]"]: moment().add(-1, "month").format(dateTimeFormat),
     ["date[end]"]: moment(new Date()).format(dateTimeFormat),
     system: system,
   };
 
-  const [batteryLevelLoading, setBatteryLevelLoading] = useState(false);
+  const [illuminationDurationLoading, setIlluminationDurationLoading] =
+    useState(false);
 
-  const [batteryLevel, setBatteryLevel] = useState([]);
+  const [illuminationDuration, setIlluminationDuration] = useState([]);
   const [filters, setFilters] = useState({ ...defaultFilters });
 
   useEffect(() => {
-    async function asyncGetBatteryLevel() {
-      setBatteryLevelLoading(true);
+    async function asyncGetilluminationDuration() {
+      setIlluminationDurationLoading(true);
 
       try {
-        const data = await batteryApi.getBatteryLevel({
+        const data = await illuminationApi.getIlluminationDuration({
           ...defaultFilters,
         });
 
-        await getLampsAndGroupsBySystem()
+        await getLampsAndGroupsBySystem();
 
-        setBatteryLevel(data);
+        setIlluminationDuration(data);
       } catch (err) {
         console.log(err);
       }
 
-      setBatteryLevelLoading(false);
+      setIlluminationDurationLoading(false);
     }
 
-    asyncGetBatteryLevel();
+    asyncGetilluminationDuration();
   }, []);
 
   const config = {
-    data: batteryLevel,
+    data: [illuminationDuration, illuminationDuration],
     xField: "date",
-    yField: "batteryLevel",
-    columnWidthRatio: 0.8,
-    xAxis: {
-      label: {
-        autoHide: true,
-        autoRotate: false,
+    yField: ["hours", "minutes"],
+    geometryOptions: [
+      {
+        geometry: "column",
+        isGroup: true,
       },
-    },
+      {
+        geometry: "line",
+        lineStyle: {
+          lineWidth: 1,
+        },
+      },
+    ],
   };
 
   // get Lamps And Groups By System
@@ -97,14 +95,7 @@ export const BatteryLevel = observer(({ system }) => {
     try {
       const systemData = await systemsApi.getSystemById(system);
 
-      let lampIds = [];
       let groupIds = [];
-
-      if (systemData.lamps) {
-        systemData.lamps.forEach((item: any) => {
-          lampIds.push(item.id);
-        });
-      }
 
       if (systemData.groups_info) {
         systemData.groups_info.forEach((item: any) => {
@@ -114,7 +105,6 @@ export const BatteryLevel = observer(({ system }) => {
 
       setFilters({
         ...defaultFilters,
-        lamp: lampIds,
         group: groupIds,
       });
     } catch (error) {
@@ -130,19 +120,12 @@ export const BatteryLevel = observer(({ system }) => {
     });
   };
 
-  // lamps filter
-  const handleChangeLamps = (value: string[]): void => {
-    setFilters({
-      ...filters,
-      lamp: value && value.length > 0 ? value : undefined,
-    });
-  };
+  const onModeChange = (event: RadioChangeEvent): void => {
+    console.log(event.target.value);
 
-  // detalization filter
-  const onDetalizationChange = (event: RadioChangeEvent): void => {
     setFilters({
       ...filters,
-      detalization: event.target.value,
+      mode: event.target.value,
     });
   };
 
@@ -196,65 +179,60 @@ export const BatteryLevel = observer(({ system }) => {
 
   //submit filters
   const submitFilters = async (): Promise<void> => {
-    setBatteryLevelLoading(true);
+    setIlluminationDurationLoading(true);
 
     try {
-      const data = await batteryApi.getBatteryLevel({
+      const data = await illuminationApi.getIlluminationDuration({
         ...filters,
       });
 
-      setBatteryLevel(data);
+      setIlluminationDuration(data);
     } catch (error) {
       console.log(error);
     }
 
-    setBatteryLevelLoading(false);
+    setIlluminationDurationLoading(false);
   };
 
-  //reset filters
+  // reset filters
   const resetFilters = async (): Promise<void> => {
-    setBatteryLevelLoading(true);
+    setIlluminationDurationLoading(true);
 
     try {
       setFilters({
         ...defaultFilters,
         group: undefined,
-        lamp: undefined,
       });
 
-      const data = await batteryApi.getBatteryLevel({
+      const data = await illuminationApi.getIlluminationDuration({
         ...defaultFilters,
         group: undefined,
-        lamp: undefined,
       });
 
-      await getLampsAndGroupsBySystem()
+      await getLampsAndGroupsBySystem();
 
-      setBatteryLevel(data);
+      setIlluminationDuration(data);
     } catch (err) {
       console.log(err);
     }
 
-    setBatteryLevelLoading(false);
+    setIlluminationDurationLoading(false);
   };
 
   return (
     <>
-      <Title style={{ marginBottom: "24px" }}>Battery Level</Title>
+      <Title style={{ marginBottom: "24px" }}>Illumination Duration</Title>
 
       <Space style={{ marginBottom: "16px" }}>
-        <Text style={{ width: "100px", display: "block" }}>Detalization</Text>
+        <Text style={{ width: "100px", display: "block" }}>Mode</Text>
         <Radio.Group
-          defaultValue="1d"
+          defaultValue="total"
           buttonStyle="solid"
-          value={filters.detalization || undefined}
-          onChange={onDetalizationChange}
+          value={filters.mode || undefined}
+          onChange={onModeChange}
         >
-          <Radio.Button value="1w">Week</Radio.Button>
-          <Radio.Button defaultChecked value="1d">
-            Day
-          </Radio.Button>
-          <Radio.Button value="1h">Hour</Radio.Button>
+          <Radio.Button value="total">Total</Radio.Button>
+          <Radio.Button value="per_mode">Per Mode</Radio.Button>
         </Radio.Group>
       </Space>
 
@@ -313,26 +291,6 @@ export const BatteryLevel = observer(({ system }) => {
         />
       </Space>
 
-      <Space style={{ marginBottom: "16px" }}>
-        <Text style={{ width: "100px", display: "block" }}>Lamps</Text>
-        <Select
-          showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) => (option?.name ?? "").includes(input)}
-          mode="multiple"
-          style={{
-            width: "360px",
-            flex: 1,
-            overflowY: "auto",
-            maxHeight: "172px",
-          }}
-          value={filters.lamp || undefined}
-          options={lampsDataOptions}
-          placeholder="Select Lamp(s)"
-          onChange={handleChangeLamps}
-        />
-      </Space>
-
       <Space>
         <Button style={{ width: "100px" }} onClick={resetFilters}>
           Reset
@@ -349,12 +307,12 @@ export const BatteryLevel = observer(({ system }) => {
 
       <br />
 
-      {batteryLevelLoading ? (
+      {illuminationDurationLoading ? (
         <Spin tip="Loading...">
-          <Column {...config} />
+          <DualAxes {...config} />
         </Spin>
       ) : (
-        <Column {...config} />
+        <DualAxes {...config} />
       )}
     </>
   );

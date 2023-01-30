@@ -26,8 +26,7 @@ const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 export const Temperature = observer(({ system }) => {
   const {
     groupsStore: { groupsData },
-    lampsStore: { lampsData },
-    systemsStore: { systemsData },
+    lampsStore: { lampsData }
   } = useStores();
 
   const groupsDataOptions = groupsData?.map((item: any) => {
@@ -114,7 +113,7 @@ export const Temperature = observer(({ system }) => {
       }
 
       setFilters({
-        ...filters,
+        ...defaultFilters,
         lamp: lampIds,
         group: groupIds,
       });

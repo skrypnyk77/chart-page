@@ -2,6 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { useParams } from "react-router-dom";
 
+import { IlluminationDuration } from '../components/charts/IlluminationDuration';
 import { BatteryLevel } from "../components/charts/BatteryLevel";
 import { Temperature } from "../components/charts/Temperature";
 
@@ -12,6 +13,9 @@ const SingleSystem = observer(() => {
 
   return (
     <Layout style={{ padding: 20 }}>
+      <IlluminationDuration system={id} />
+      <br />
+      <br />
       <BatteryLevel system={id} />
       <br />
       <br />
