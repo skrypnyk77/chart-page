@@ -67,6 +67,8 @@ export const Temperature = observer(({ system }) => {
           ...defaultFilters,
         });
 
+        await getLampsAndGroupsBySystem()
+
         setTemperature(data);
       } catch (err) {
         console.log(err);
@@ -89,6 +91,36 @@ export const Temperature = observer(({ system }) => {
         autoRotate: false,
       },
     },
+  };
+
+  // get Lamps And Groups By System
+  const getLampsAndGroupsBySystem = async (): Promise<void> => {
+    try {
+      const systemData = await systemsApi.getSystemById(system);
+
+      let lampIds = [];
+      let groupIds = [];
+
+      if (systemData.lamps) {
+        systemData.lamps.forEach((item: any) => {
+          lampIds.push(item.id);
+        });
+      }
+
+      if (systemData.groups_info) {
+        systemData.groups_info.forEach((item: any) => {
+          groupIds.push(item.group.id);
+        });
+      }
+
+      setFilters({
+        ...filters,
+        lamp: lampIds,
+        group: groupIds,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // groups filter
@@ -196,6 +228,8 @@ export const Temperature = observer(({ system }) => {
         group: undefined,
         lamp: undefined,
       });
+
+      await getLampsAndGroupsBySystem()
 
       setTemperature(data);
     } catch (err) {

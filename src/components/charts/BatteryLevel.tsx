@@ -67,6 +67,8 @@ export const BatteryLevel = observer(({ system }) => {
           ...defaultFilters,
         });
 
+        await getLampsAndGroupsBySystem()
+
         setBatteryLevel(data);
       } catch (err) {
         console.log(err);
@@ -89,6 +91,35 @@ export const BatteryLevel = observer(({ system }) => {
         autoRotate: false,
       },
     },
+  };
+
+  // get Lamps And Groups By System
+  const getLampsAndGroupsBySystem = async (): Promise<void> => {
+    try {
+      const systemData = await systemsApi.getSystemById(system);
+
+      let lampIds = [];
+      let groupIds = [];
+
+      if (systemData.lamps) {
+        systemData.lamps.forEach((item: any) => {
+          lampIds.push(item.id);
+        });
+      }
+
+      if (systemData.groups_info) {
+        systemData.groups_info.forEach((item: any) => {
+          groupIds.push(item.group.id);
+        });
+      }
+      setFilters({
+        ...filters,
+        lamp: lampIds,
+        group: groupIds,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // groups filter
@@ -196,6 +227,8 @@ export const BatteryLevel = observer(({ system }) => {
         group: undefined,
         lamp: undefined,
       });
+
+      await getLampsAndGroupsBySystem()
 
       setBatteryLevel(data);
     } catch (err) {
