@@ -23,10 +23,10 @@ const { RangePicker } = DatePicker;
 
 const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 
-export const BatteryLevel = observer(({ system }) => {
+export const BatteryLevel = observer(({ system, params }) => {
   const {
     groupsStore: { groupsData },
-    lampsStore: { lampsData }
+    lampsStore: { lampsData },
   } = useStores();
 
   const groupsDataOptions = groupsData?.map((item: any) => {
@@ -50,32 +50,27 @@ export const BatteryLevel = observer(({ system }) => {
     ["date[start]"]: moment().add(-1, "month").format(dateTimeFormat),
     ["date[end]"]: moment(new Date()).format(dateTimeFormat),
     system: system,
+    lamp: params.lamp,
+    group: params.group,
   };
 
   const [batteryLevelLoading, setBatteryLevelLoading] = useState(false);
 
   const [batteryLevel, setBatteryLevel] = useState([]);
-  const [filters, setFilters] = useState({ ...defaultFilters });
+  const [filters, setFilters] = useState({});
+
+  const asyncGetBatteryLevel = async (): Promise<void> => {
+    try {
+      const data = await batteryApi.getBatteryLevel({
+        ...defaultFilters,
+      });
+
+      setFilters({ ...defaultFilters });
+      setBatteryLevel(data);
+    } catch (error) {}
+  };
 
   useEffect(() => {
-    async function asyncGetBatteryLevel() {
-      setBatteryLevelLoading(true);
-
-      try {
-        const data = await batteryApi.getBatteryLevel({
-          ...defaultFilters,
-        });
-
-        await getLampsAndGroupsBySystem()
-
-        setBatteryLevel(data);
-      } catch (err) {
-        console.log(err);
-      }
-
-      setBatteryLevelLoading(false);
-    }
-
     asyncGetBatteryLevel();
   }, []);
 
@@ -90,36 +85,6 @@ export const BatteryLevel = observer(({ system }) => {
         autoRotate: false,
       },
     },
-  };
-
-  // get Lamps And Groups By System
-  const getLampsAndGroupsBySystem = async (): Promise<void> => {
-    try {
-      const systemData = await systemsApi.getSystemById(system);
-
-      let lampIds = [];
-      let groupIds = [];
-
-      if (systemData.lamps) {
-        systemData.lamps.forEach((item: any) => {
-          lampIds.push(item.id);
-        });
-      }
-
-      if (systemData.groups_info) {
-        systemData.groups_info.forEach((item: any) => {
-          groupIds.push(item.group.id);
-        });
-      }
-
-      setFilters({
-        ...defaultFilters,
-        lamp: lampIds,
-        group: groupIds,
-      });
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   // groups filter
@@ -213,29 +178,7 @@ export const BatteryLevel = observer(({ system }) => {
 
   //reset filters
   const resetFilters = async (): Promise<void> => {
-    setBatteryLevelLoading(true);
-
-    try {
-      setFilters({
-        ...defaultFilters,
-        group: undefined,
-        lamp: undefined,
-      });
-
-      const data = await batteryApi.getBatteryLevel({
-        ...defaultFilters,
-        group: undefined,
-        lamp: undefined,
-      });
-
-      await getLampsAndGroupsBySystem()
-
-      setBatteryLevel(data);
-    } catch (err) {
-      console.log(err);
-    }
-
-    setBatteryLevelLoading(false);
+    await asyncGetBatteryLevel();
   };
 
   return (
@@ -288,8 +231,14 @@ export const BatteryLevel = observer(({ system }) => {
           format={dateTimeFormat}
           placeholder={["Start Date", "End Date"]}
           value={[
-            moment(filters["date[start]"], dateTimeFormat),
-            moment(filters["date[end]"], dateTimeFormat),
+            moment(
+              filters["date[start]"] || defaultFilters["date[start]"],
+              dateTimeFormat
+            ),
+            moment(
+              filters["date[end]"] || defaultFilters["date[end]"],
+              dateTimeFormat
+            ),
           ]}
           onChange={onDateFromChange}
         />

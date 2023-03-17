@@ -23,7 +23,7 @@ const { RangePicker } = DatePicker;
 
 const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 
-export const IlluminationDuration = observer(({ system }) => {
+export const IlluminationDuration = observer(({ system, params }) => {
   const {
     groupsStore: { groupsData },
   } = useStores();
@@ -42,33 +42,44 @@ export const IlluminationDuration = observer(({ system }) => {
     ["date[start]"]: moment().add(-1, "month").format(dateTimeFormat),
     ["date[end]"]: moment(new Date()).format(dateTimeFormat),
     system: system,
+    group: params.group,
   };
 
   const [illuminationDurationLoading, setIlluminationDurationLoading] =
     useState(false);
 
   const [illuminationDuration, setIlluminationDuration] = useState([]);
-  const [filters, setFilters] = useState({ ...defaultFilters });
+  const [filters, setFilters] = useState({});
 
-  useEffect(() => {
-    async function asyncGetilluminationDuration() {
-      setIlluminationDurationLoading(true);
+  const asyncGetilluminationDuration = async (): Promise<void> => {
+    setIlluminationDurationLoading(true);
 
-      try {
-        const data = await illuminationApi.getIlluminationDuration({
-          ...defaultFilters,
+    try {
+      const systemData = await systemsApi.getSystemById(system);
+
+      let groupIds = [];
+
+      if (systemData.groups_info) {
+        systemData.groups_info.forEach((item: any) => {
+          groupIds.push(item.group.id);
         });
-
-        await getLampsAndGroupsBySystem();
-
-        setIlluminationDuration(data);
-      } catch (err) {
-        console.log(err);
       }
 
-      setIlluminationDurationLoading(false);
+      const data = await illuminationApi.getIlluminationDuration({
+        ...defaultFilters,
+        group: groupIds,
+      });
+
+      setFilters({ ...defaultFilters, group: groupIds });
+      setIlluminationDuration(data);
+    } catch (err) {
+      console.log(err);
     }
 
+    setIlluminationDurationLoading(false);
+  };
+
+  useEffect(() => {
     asyncGetilluminationDuration();
   }, []);
 
@@ -90,28 +101,6 @@ export const IlluminationDuration = observer(({ system }) => {
     ],
   };
 
-  // get Lamps And Groups By System
-  const getLampsAndGroupsBySystem = async (): Promise<void> => {
-    try {
-      const systemData = await systemsApi.getSystemById(system);
-
-      let groupIds = [];
-
-      if (systemData.groups_info) {
-        systemData.groups_info.forEach((item: any) => {
-          groupIds.push(item.group.id);
-        });
-      }
-
-      setFilters({
-        ...defaultFilters,
-        group: groupIds,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   // groups filter
   const handleChangeGroups = (value: string[]): void => {
     setFilters({
@@ -121,8 +110,6 @@ export const IlluminationDuration = observer(({ system }) => {
   };
 
   const onModeChange = (event: RadioChangeEvent): void => {
-    console.log(event.target.value);
-
     setFilters({
       ...filters,
       mode: event.target.value,
@@ -196,27 +183,7 @@ export const IlluminationDuration = observer(({ system }) => {
 
   // reset filters
   const resetFilters = async (): Promise<void> => {
-    setIlluminationDurationLoading(true);
-
-    try {
-      setFilters({
-        ...defaultFilters,
-        group: undefined,
-      });
-
-      const data = await illuminationApi.getIlluminationDuration({
-        ...defaultFilters,
-        group: undefined,
-      });
-
-      await getLampsAndGroupsBySystem();
-
-      setIlluminationDuration(data);
-    } catch (err) {
-      console.log(err);
-    }
-
-    setIlluminationDurationLoading(false);
+    await asyncGetilluminationDuration();
   };
 
   return (
@@ -266,8 +233,14 @@ export const IlluminationDuration = observer(({ system }) => {
           format={dateTimeFormat}
           placeholder={["Start Date", "End Date"]}
           value={[
-            moment(filters["date[start]"], dateTimeFormat),
-            moment(filters["date[end]"], dateTimeFormat),
+            moment(
+              filters["date[start]"] || defaultFilters["date[start]"],
+              dateTimeFormat
+            ),
+            moment(
+              filters["date[end]"] || defaultFilters["date[end]"],
+              dateTimeFormat
+            ),
           ]}
           onChange={onDateFromChange}
         />

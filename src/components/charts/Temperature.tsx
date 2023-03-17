@@ -23,10 +23,10 @@ const { RangePicker } = DatePicker;
 
 const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 
-export const Temperature = observer(({ system }) => {
+export const Temperature = observer(({ system, params }) => {
   const {
     groupsStore: { groupsData },
-    lampsStore: { lampsData }
+    lampsStore: { lampsData },
   } = useStores();
 
   const groupsDataOptions = groupsData?.map((item: any) => {
@@ -50,32 +50,33 @@ export const Temperature = observer(({ system }) => {
     ["date[start]"]: moment().add(-1, "month").format(dateTimeFormat),
     ["date[end]"]: moment(new Date()).format(dateTimeFormat),
     system: system,
+    lamp: params.lamp,
+    group: params.group,
   };
 
   const [temperatureLoading, setTemperatureLoading] = useState(false);
 
   const [temperature, setTemperature] = useState([]);
-  const [filters, setFilters] = useState({ ...defaultFilters });
+  const [filters, setFilters] = useState({});
 
-  useEffect(() => {
-    async function asyncGetTemperature() {
-      setTemperatureLoading(true);
+  const asyncGetTemperature = async (): Promise<void> => {
+    setTemperatureLoading(true);
 
-      try {
-        const data = await temperatureApi.getTemperature({
-          ...defaultFilters,
-        });
+    try {
+      const data = await temperatureApi.getTemperature({
+        ...defaultFilters,
+      });
 
-        await getLampsAndGroupsBySystem()
-
-        setTemperature(data);
-      } catch (err) {
-        console.log(err);
-      }
-
-      setTemperatureLoading(false);
+      setFilters({ ...defaultFilters });
+      setTemperature(data);
+    } catch (err) {
+      console.log(err);
     }
 
+    setTemperatureLoading(false);
+  };
+
+  useEffect(() => {
     asyncGetTemperature();
   }, []);
 
@@ -90,36 +91,6 @@ export const Temperature = observer(({ system }) => {
         autoRotate: false,
       },
     },
-  };
-
-  // get Lamps And Groups By System
-  const getLampsAndGroupsBySystem = async (): Promise<void> => {
-    try {
-      const systemData = await systemsApi.getSystemById(system);
-
-      let lampIds = [];
-      let groupIds = [];
-
-      if (systemData.lamps) {
-        systemData.lamps.forEach((item: any) => {
-          lampIds.push(item.id);
-        });
-      }
-
-      if (systemData.groups_info) {
-        systemData.groups_info.forEach((item: any) => {
-          groupIds.push(item.group.id);
-        });
-      }
-
-      setFilters({
-        ...defaultFilters,
-        lamp: lampIds,
-        group: groupIds,
-      });
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   // groups filter
@@ -213,29 +184,7 @@ export const Temperature = observer(({ system }) => {
 
   //reset filters
   const resetFilters = async (): Promise<void> => {
-    setTemperatureLoading(true);
-
-    try {
-      setFilters({
-        ...defaultFilters,
-        group: undefined,
-        lamp: undefined,
-      });
-
-      const data = await temperatureApi.getTemperature({
-        ...defaultFilters,
-        group: undefined,
-        lamp: undefined,
-      });
-
-      await getLampsAndGroupsBySystem()
-
-      setTemperature(data);
-    } catch (err) {
-      console.log(err);
-    }
-
-    setTemperatureLoading(false);
+    await asyncGetTemperature();
   };
 
   return (
@@ -288,8 +237,14 @@ export const Temperature = observer(({ system }) => {
           format={dateTimeFormat}
           placeholder={["Start Date", "End Date"]}
           value={[
-            moment(filters["date[start]"], dateTimeFormat),
-            moment(filters["date[end]"], dateTimeFormat),
+            moment(
+              filters["date[start]"] || defaultFilters["date[start]"],
+              dateTimeFormat
+            ),
+            moment(
+              filters["date[end]"] || defaultFilters["date[end]"],
+              dateTimeFormat
+            ),
           ]}
           onChange={onDateFromChange}
         />

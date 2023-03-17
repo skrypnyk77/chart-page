@@ -17,8 +17,6 @@ const Auth = observer(() => {
   } = useStores();
 
   const onFinish = async (values: any): Promise<void> => {
-    console.log("onFinish:", values);
-
     await login({ ...values });
 
     navigate(`/systems`);
