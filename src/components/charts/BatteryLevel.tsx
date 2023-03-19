@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import batteryApi from "../../data/batteryApi";
-import systemsApi from "../../data/systemsApi";
 
 import { useStores } from "../../use-stores";
 
@@ -67,7 +66,9 @@ export const BatteryLevel = observer(({ system, params }) => {
 
       setFilters({ ...defaultFilters });
       setBatteryLevel(data);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {

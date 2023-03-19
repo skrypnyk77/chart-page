@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import temperatureApi from "../../data/temperatureApi";
-import systemsApi from "../../data/systemsApi";
 
 import { useStores } from "../../use-stores";
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import illuminationApi from "../../data/illuminationApi";
-import systemsApi from "../../data/systemsApi";
 
 import { useStores } from "../../use-stores";
 
@@ -55,22 +54,11 @@ export const IlluminationDuration = observer(({ system, params }) => {
     setIlluminationDurationLoading(true);
 
     try {
-      const systemData = await systemsApi.getSystemById(system);
-
-      let groupIds = [];
-
-      if (systemData.groups_info) {
-        systemData.groups_info.forEach((item: any) => {
-          groupIds.push(item.group.id);
-        });
-      }
-
       const data = await illuminationApi.getIlluminationDuration({
         ...defaultFilters,
-        group: groupIds,
       });
 
-      setFilters({ ...defaultFilters, group: groupIds });
+      setFilters({ ...defaultFilters });
       setIlluminationDuration(data);
     } catch (err) {
       console.log(err);
