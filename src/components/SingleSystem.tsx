@@ -50,7 +50,7 @@ const SingleSystem = observer(() => {
   return (
     !isLoading && (
       <Layout style={{ padding: 20 }}>
-        <CombineIlluminationDurationAndBatteryLevel system={id} params={params} />
+        <CombineIlluminationDurationAndBatteryLevel />
         <br />
         <br />
         <IlluminationDuration system={id} params={params} />
