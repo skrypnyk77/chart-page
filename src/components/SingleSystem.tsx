@@ -3,7 +3,8 @@ import { observer } from "mobx-react";
 import { useParams } from "react-router-dom";
 import systemsApi from "../data/systemsApi";
 
-import { CombineIlluminationDurationAndBatteryLevel } from "../components/charts/CombineIlluminationDurationAndBatteryLevel";
+import { CombineIlluminationDurationAndBatteryLevelPerDay } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerDay";
+import { CombineIlluminationDurationAndBatteryLevelPerHour } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerHour";
 import { IlluminationDuration } from "../components/charts/IlluminationDuration";
 import { BatteryLevel } from "../components/charts/BatteryLevel";
 import { Temperature } from "../components/charts/Temperature";
@@ -50,7 +51,10 @@ const SingleSystem = observer(() => {
   return (
     !isLoading && (
       <Layout style={{ padding: 20 }}>
-        <CombineIlluminationDurationAndBatteryLevel />
+        <CombineIlluminationDurationAndBatteryLevelPerDay system={id}  />
+        <br />
+        <br />
+        <CombineIlluminationDurationAndBatteryLevelPerHour system={id} />
         <br />
         <br />
         <IlluminationDuration system={id} params={params} />
