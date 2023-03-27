@@ -92,7 +92,7 @@ export const CombineIlluminationDurationAndBatteryLevelPerDay = observer(
           autoHide: false,
           autoEllipsis: false,
         },
-        tickCount: illuminationDuration.length / 6,
+        tickCount: illuminationDuration.length,
       },
       legend: {
         custom: true,
