@@ -54,7 +54,11 @@ export const CombineIlluminationDurationAndBatteryLevelPerHour = observer(
             });
 
           const minutesMapped = illuminationDuration.map((item) => {
-            return { date: item.date, minutes: item.minutes, name: "minutes" };
+            return {
+              date: item.date,
+              minutes: item.minutes,
+              name: "minutes",
+            };
           });
 
           setIlluminationDuration([...minutesMapped]);
@@ -88,10 +92,19 @@ export const CombineIlluminationDurationAndBatteryLevelPerHour = observer(
       ],
       xAxis: {
         label: {
+          formatter: (text: string, item: any, index: number) => {
+            const el = item.name.split(" ")
+
+            if (el[1] === "00:00") {
+              return el[0] + el[1]
+            } else {
+              return el[1]
+            }
+          },
           style: {
             fontSize: 8,
-            textAlign: 'right',
-            textBaseline: 'middle',
+            textAlign: "right",
+            textBaseline: "middle",
           },
           rotate: 11,
           autoRotate: true,
