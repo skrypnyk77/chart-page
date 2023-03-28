@@ -53,11 +53,11 @@ export const CombineIlluminationDurationAndBatteryLevelPerDay = observer(
               ...defaultIlluminationDurationWeekFilters,
             });
 
-          const minutesMapped = illuminationDuration.map((item) => {
-            return { date: item.date, minutes: item.minutes, name: "minutes" };
+          const hoursMapped = illuminationDuration.map((item) => {
+            return { date: item.date, hours: item.hours, name: "hours" };
           });
 
-          setIlluminationDuration([...minutesMapped]);
+          setIlluminationDuration([...hoursMapped]);
         } catch (err) {
           console.log(err);
         }
@@ -72,7 +72,7 @@ export const CombineIlluminationDurationAndBatteryLevelPerDay = observer(
     const config = {
       data: [illuminationDuration, batteryLevel],
       xField: "date",
-      yField: ["minutes", "batteryLevel"],
+      yField: ["hours", "batteryLevel"],
       geometryOptions: [
         {
           geometry: "column",
@@ -87,7 +87,14 @@ export const CombineIlluminationDurationAndBatteryLevelPerDay = observer(
         },
       ],
       xAxis: {
+        fontSize: 20,
         label: {
+          style: {
+            fontSize: 12,
+            textAlign: 'right',
+            textBaseline: 'middle',
+          },
+          rotate: 11,
           autoRotate: true,
           autoHide: false,
           autoEllipsis: false,
@@ -110,8 +117,8 @@ export const CombineIlluminationDurationAndBatteryLevelPerDay = observer(
             },
           },
           {
-            value: "minutes",
-            name: "Light Operations (minutes)",
+            value: "hours",
+            name: "Light Operations (hours)",
             marker: {
               symbol: "square",
               style: {

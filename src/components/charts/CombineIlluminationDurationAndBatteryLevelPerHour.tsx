@@ -88,11 +88,17 @@ export const CombineIlluminationDurationAndBatteryLevelPerHour = observer(
       ],
       xAxis: {
         label: {
+          style: {
+            fontSize: 8,
+            textAlign: 'right',
+            textBaseline: 'middle',
+          },
+          rotate: 11,
           autoRotate: true,
           autoHide: false,
           autoEllipsis: false,
         },
-        tickCount: illuminationDuration.length / 6,
+        tickCount: illuminationDuration.length,
       },
       legend: {
         custom: true,
