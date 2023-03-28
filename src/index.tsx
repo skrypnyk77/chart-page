@@ -12,6 +12,7 @@ import "antd/dist/antd.css";
 import Auth from "./components/auth/Auth";
 import SystemsList from "./components/SystemsList";
 import SingleSystem from "./components/SingleSystem";
+import Sidebar from "./components/Sidebar";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -21,22 +22,28 @@ const App = observer(() => {
   } = useStores();
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {!isLogged ? (
-          <>
-            <Route path="*" element={<Navigate to="/login" replace />} />
-            <Route path="/login" element={<Auth />} />
-          </>
-        ) : (
-          <>
-            <Route path="/systems" element={<SystemsList />} />
-            <Route path="/systems/:id" element={<SingleSystem />} />
-            <Route path="*" element={<Navigate to="/systems" replace />} />
-          </>
-        )}
-      </Routes>
-    </BrowserRouter>
+    <div
+      style={{ background: "#f0f2f5", display: "flex", position: "relative", paddingLeft: 122 }}
+    >
+      <BrowserRouter>
+        {isLogged && <Sidebar />}
+
+        <Routes>
+          {!isLogged ? (
+            <>
+              <Route path="*" element={<Navigate to="/login" replace />} />
+              <Route path="/login" element={<Auth />} />
+            </>
+          ) : (
+            <>
+              <Route path="/systems" element={<SystemsList />} />
+              <Route path="/systems/:id" element={<SingleSystem />} />
+              <Route path="*" element={<Navigate to="/systems" replace />} />
+            </>
+          )}
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 });
 
