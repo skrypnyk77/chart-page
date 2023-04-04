@@ -11,6 +11,7 @@ import "antd/dist/antd.css";
 
 import Auth from "./components/auth/Auth";
 import SystemsList from "./components/SystemsList";
+import UsersList from "./components/UsersList";
 import SingleSystem from "./components/SingleSystem";
 import Sidebar from "./components/Sidebar";
 
@@ -39,6 +40,7 @@ const App = observer(() => {
               <Route path="/systems" element={<SystemsList />} />
               <Route path="/systems/:id" element={<SingleSystem />} />
               <Route path="*" element={<Navigate to="/systems" replace />} />
+              <Route path="/users" element={<UsersList />} />
             </>
           )}
         </Routes>
