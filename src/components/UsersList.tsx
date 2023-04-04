@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { useNavigate } from "react-router-dom";
 import userApi from "../data/userApi";
 
 import {
@@ -20,13 +19,19 @@ import {
 } from "antd";
 
 const { Title } = Typography;
-const { Option } = Select;
 
 type NotificationType = "success" | "error";
 
+interface AvailableSystem {
+  code: string;
+  created_at: string;
+  id: number;
+  name: string;
+}
+
 interface Item {
   key: number;
-  available_systems: number[];
+  available_systems: any[];
   created_at: string;
   id: number;
   login: string;
@@ -79,8 +84,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
 };
 
 const UsersList = observer(() => {
-  const navigate = useNavigate();
-
   const [form] = Form.useForm();
   const [key, setKey] = useState(0);
   const [editingKey, setEditingKey] = useState("");
@@ -171,6 +174,7 @@ const UsersList = observer(() => {
         password: "string",
         name: "John Doe",
         note: "string",
+        available_systems: [1],
       });
 
       await asyncGetUsers();
@@ -245,7 +249,15 @@ const UsersList = observer(() => {
       key: "available_systems",
       editable: false,
       render: (_: any, record: Item) => {
-        return record.available_systems?.join(", ");
+        const availableSystemsNames: string[] = [];
+
+        record.available_systems?.forEach((item: AvailableSystem) =>
+          availableSystemsNames.push(item.name)
+        );
+
+        return availableSystemsNames.length > 0
+          ? availableSystemsNames?.join(", ")
+          : "-";
       },
     },
     {

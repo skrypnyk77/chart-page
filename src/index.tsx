@@ -24,7 +24,12 @@ const App = observer(() => {
 
   return (
     <div
-      style={{ background: "#f0f2f5", display: "flex", position: "relative", paddingLeft: 122 }}
+      style={{
+        background: "#f0f2f5",
+        display: "flex",
+        position: "relative",
+        paddingLeft: 122,
+      }}
     >
       <BrowserRouter>
         {isLogged && <Sidebar />}
@@ -32,15 +37,15 @@ const App = observer(() => {
         <Routes>
           {!isLogged ? (
             <>
-              <Route path="*" element={<Navigate to="/login" replace />} />
-              <Route path="/login" element={<Auth />} />
+              <Route path="*" element={<Navigate to="/charts/login" replace />} />
+              <Route path="/charts/login" element={<Auth />} />
             </>
           ) : (
             <>
-              <Route path="/systems" element={<SystemsList />} />
-              <Route path="/systems/:id" element={<SingleSystem />} />
-              <Route path="*" element={<Navigate to="/systems" replace />} />
-              <Route path="/users" element={<UsersList />} />
+              <Route path="/charts/systems" element={<SystemsList />} />
+              <Route path="/charts/systems/:id" element={<SingleSystem />} />
+              <Route path="*" element={<Navigate to="/charts/systems" replace />} />
+              <Route path="/charts/users" element={<UsersList />} />
             </>
           )}
         </Routes>

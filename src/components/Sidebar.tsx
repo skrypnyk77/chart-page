@@ -39,7 +39,7 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
 
   const onClick: MenuProps["onClick"] = (e) => {
-    navigate(e.key);
+    navigate(`/charts/${e.key}`);
   };
 
   return (

@@ -32,9 +32,18 @@ class UserApi {
   async updateUser(params: any) {
     const { id, ...rest } = params;
 
-    await apiClient.patch(`/users/${id}`, {
-      ...rest,
-    });
+    await apiClient.patch(
+      `/users/${id}`,
+      {
+        ...rest,
+      },
+      {
+        headers: {
+          "Content-Type": "application/merge-patch+json",
+          Accept: "application/json",
+        },
+      }
+    );
   }
 
   async deleteUser(id: string) {
