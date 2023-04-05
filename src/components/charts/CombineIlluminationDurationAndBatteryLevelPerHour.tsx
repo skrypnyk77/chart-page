@@ -146,7 +146,7 @@ export const CombineIlluminationDurationAndBatteryLevelPerHour = observer(
     return (
       <>
         <Title style={{ marginBottom: "24px" }}>
-          Biggin Hill / Battery Level vs Operation Time (Weekly Per Hour)
+          Battery Level vs Operation Time (Weekly Per Hour)
         </Title>
         <br />
         {combineDurationAndBatteryLoading ? (

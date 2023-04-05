@@ -28,7 +28,7 @@ const App = observer(() => {
         background: "#f0f2f5",
         display: "flex",
         position: "relative",
-        paddingLeft: 122,
+        paddingLeft: 220,
       }}
     >
       <BrowserRouter>
@@ -42,9 +42,9 @@ const App = observer(() => {
             </>
           ) : (
             <>
-              <Route path="/charts/systems" element={<SystemsList />} />
-              <Route path="/charts/systems/:id" element={<SingleSystem />} />
-              <Route path="*" element={<Navigate to="/charts/systems" replace />} />
+              <Route path="/charts/dashboard" element={<SystemsList />} />
+              <Route path="/charts/dashboard/:id" element={<SingleSystem />} />
+              <Route path="*" element={<Navigate to="/charts/dashboard" replace />} />
               <Route path="/charts/users" element={<UsersList />} />
             </>
           )}

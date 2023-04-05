@@ -15,11 +15,14 @@ const SingleSystem = observer(() => {
   let { id } = useParams();
 
   const [isLoading, setIsLoading] = useState(true);
+  const [systemTitle, setSystemTitle] = useState("");
   const [params, setParams] = useState({});
 
   const getAdditionalInfoAboutSystem = async (): Promise<void> => {
     try {
       const systemData = await systemsApi.getSystemById(Number(id));
+
+      setSystemTitle(systemData.name);
 
       let lampIds = [];
       let groupIds = [];
@@ -51,7 +54,10 @@ const SingleSystem = observer(() => {
   return (
     !isLoading && (
       <Layout style={{ padding: 20 }}>
-        <CombineIlluminationDurationAndBatteryLevelPerDay system={id}  />
+        <h1 style={{ fontSize: 40, fontWeight: "bold", paddingBottom: 50 }}>
+          {systemTitle || ""}
+        </h1>
+        <CombineIlluminationDurationAndBatteryLevelPerDay system={id} />
         <br />
         <br />
         <CombineIlluminationDurationAndBatteryLevelPerHour system={id} />

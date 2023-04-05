@@ -2,11 +2,10 @@ import React from "react";
 import {
   HomeOutlined,
   UserOutlined,
-  SettingOutlined,
   UsergroupDeleteOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Menu } from "antd";
+import { Menu, Image } from "antd";
 
 import { useNavigate } from "react-router-dom";
 
@@ -29,9 +28,8 @@ function getItem(
 }
 
 const items: MenuProps["items"] = [
-  getItem("Home", "home", <HomeOutlined />),
+  getItem("Dashboard", "dashboard", <HomeOutlined />),
   getItem("Profile", "profile", <UserOutlined />),
-  getItem("Settings", "settings", <SettingOutlined />),
   getItem("Users", "users", <UsergroupDeleteOutlined />),
 ];
 
@@ -43,20 +41,32 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <Menu
-      onClick={onClick}
+    <div
       style={{
-        width: 122,
+        width: 180,
         background: "#ffffff",
         position: "fixed",
         left: 0,
         height: "100%",
         zIndex: 1,
+        boxShadow: "0 0 10px 5px #bbb",
       }}
-      defaultSelectedKeys={["settings"]}
-      mode="inline"
-      items={items}
-    />
+    >
+      <div style={{ margin: '20px 16px 20px 24px' }}>
+        <Image
+          width={140}
+          height={38}
+          preview={false}
+          src="https://solutions4ga.com/wp-content/themes/wi/images/logo.png"
+        />
+      </div>
+      <Menu
+        onClick={onClick}
+        defaultSelectedKeys={["dashboard"]}
+        mode="inline"
+        items={items}
+      />
+    </div>
   );
 };
 

@@ -22,6 +22,17 @@ const { Title } = Typography;
 
 type NotificationType = "success" | "error";
 
+interface CurrentUser {
+  id: number;
+  login: string;
+  roles: string[];
+  name: string;
+  note: string;
+  created_at: string;
+  modified_at: string;
+  available_systems: AvailableSystem[];
+}
+
 interface AvailableSystem {
   code: string;
   created_at: string;
@@ -87,9 +98,9 @@ const UsersList = observer(() => {
   const [form] = Form.useForm();
   const [key, setKey] = useState(0);
   const [editingKey, setEditingKey] = useState("");
+  const [currentUser, setCurrentUser] = useState<CurrentUser>({});
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState([]);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onFinish = async (values: any) => {
@@ -124,6 +135,18 @@ const UsersList = observer(() => {
     });
   };
 
+  async function asyncGetUsersMe() {
+    try {
+      const user = await userApi.getUsersMe();
+
+      console.log("me", user);
+
+      setCurrentUser(user);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async function asyncGetUsers() {
     setIsLoading(true);
 
@@ -136,7 +159,7 @@ const UsersList = observer(() => {
 
       setUsers(mapped);
 
-      console.log("users", mapped);
+      console.log("users", users);
     } catch (error) {
       console.log(error);
     }
@@ -180,10 +203,8 @@ const UsersList = observer(() => {
       await asyncGetUsers();
 
       setEditingKey("");
-
-      // openNotificationWithIcon("success", "You succesfully updated the user");
     } catch (error) {
-      // openNotificationWithIcon("error", "Something went wrong");
+      console.log(error);
     }
   }
 
@@ -194,18 +215,15 @@ const UsersList = observer(() => {
       await userApi.deleteUser(id);
 
       await asyncGetUsers();
-
-      // openNotificationWithIcon("success", "You succesfully deleted the user");
     } catch (error) {
       console.log(error);
-
-      // openNotificationWithIcon("error", "Something went wrong");
     }
 
     setIsLoading(false);
   }
 
   useEffect(() => {
+    asyncGetUsersMe();
     asyncGetUsers();
   }, []);
 
@@ -232,6 +250,18 @@ const UsersList = observer(() => {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      editable: true,
+    },
+    {
+      title: "Login",
+      dataIndex: "login",
+      key: "login",
+      editable: true,
+    },
+    {
+      title: "Password",
+      dataIndex: "password",
+      key: "password",
       editable: true,
     },
     {
@@ -264,6 +294,7 @@ const UsersList = observer(() => {
       title: "Operation",
       dataIndex: "operation",
       key: "operation",
+      width: "160px",
       render: (_: any, record: Item) => {
         const editable = isEditing(record);
 
@@ -287,9 +318,12 @@ const UsersList = observer(() => {
             >
               Edit
             </Typography.Link>
-            <Typography.Link onClick={() => asyncDeleteUser(String(record.id))}>
-              Delete
-            </Typography.Link>
+            <Popconfirm
+              title="Sure to delete?"
+              onConfirm={() => asyncDeleteUser(record.id)}
+            >
+              <a>Delete</a>
+            </Popconfirm>
           </Space>
         );
       },
@@ -383,6 +417,14 @@ const UsersList = observer(() => {
                   { label: "ROLE_USER", value: "ROLE_USER" },
                   { label: "ROLE_ADMIN", value: "ROLE_ADMIN" },
                 ]}
+              />
+            </Form.Item>
+
+            <Form.Item label="Systems" name="available_systems">
+              <Select
+                placeholder="Select System(s)"
+                mode="multiple"
+                options={[]}
               />
             </Form.Item>
 

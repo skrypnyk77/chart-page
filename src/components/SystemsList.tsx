@@ -35,7 +35,7 @@ const SystemsList = observer(() => {
   }, []);
 
   const handleOpenSystem = (id: string): void => {
-    navigate(`/charts/systems/${id}`);
+    navigate(`/charts/dashboard/${id}`);
   };
 
   return (

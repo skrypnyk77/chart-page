@@ -15,6 +15,12 @@ class UserApi {
     return data;
   }
 
+  async getUsersMe() {
+    const { data } = await apiClient.get("/users/me");
+
+    return data;
+  }
+
   async getUsers(params?: any) {
     const { data } = await apiClient.get("/users", params);
 
@@ -32,7 +38,7 @@ class UserApi {
   async updateUser(params: any) {
     const { id, ...rest } = params;
 
-    await apiClient.patch(
+    await apiClient.put(
       `/users/${id}`,
       {
         ...rest,

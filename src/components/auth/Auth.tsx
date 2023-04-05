@@ -24,11 +24,11 @@ const Auth = observer(() => {
 
   return (
     <Layout
-      style={{ height: "100%", display: "flex", justifyContent: "center" }}
+      style={{ height: "100%", display: "flex", justifyContent: "center", paddingRight: 220 }}
     >
       <Form
         name="basic"
-        style={{ minWidth: 480, height: "100%", margin: "200px auto" }}
+        style={{ width: 480, height: "100%", margin: "200px auto" }}
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
