@@ -5,18 +5,22 @@ import { useNavigate } from "react-router-dom";
 
 import { Card, Layout, Typography, Row, Col, Spin } from "antd";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const SystemsList = observer(() => {
   const navigate = useNavigate();
 
   const {
+    userStore: { getMe },
     groupsStore: { getGroups },
     lampsStore: { getLamps },
     systemsStore: { getSystems, systemsData, isLoading },
   } = useStores();
 
   useEffect(() => {
+    async function asyncGetMe() {
+      await getMe();
+    }
     async function asyncGetLamps() {
       await getLamps();
     }
@@ -29,6 +33,7 @@ const SystemsList = observer(() => {
       await getSystems();
     }
 
+    asyncGetMe();
     asyncGetLamps();
     asyncGetGroups();
     asyncGetSystems();

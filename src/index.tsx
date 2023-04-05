@@ -19,7 +19,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const App = observer(() => {
   const {
-    userStore: { isLogged },
+    userStore: { isLogged, isAdmin },
   } = useStores();
 
   return (
@@ -37,15 +37,23 @@ const App = observer(() => {
         <Routes>
           {!isLogged ? (
             <>
-              <Route path="*" element={<Navigate to="/charts/login" replace />} />
+              <Route
+                path="*"
+                element={<Navigate to="/charts/login" replace />}
+              />
               <Route path="/charts/login" element={<Auth />} />
             </>
           ) : (
             <>
               <Route path="/charts/dashboard" element={<SystemsList />} />
               <Route path="/charts/dashboard/:id" element={<SingleSystem />} />
-              <Route path="*" element={<Navigate to="/charts/dashboard" replace />} />
-              <Route path="/charts/users" element={<UsersList />} />
+              <Route
+                path="*"
+                element={<Navigate to="/charts/dashboard" replace />}
+              />
+              {isAdmin && (
+                <Route path="/charts/users" element={<UsersList />} />
+              )}
             </>
           )}
         </Routes>

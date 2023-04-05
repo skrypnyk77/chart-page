@@ -135,18 +135,6 @@ const UsersList = observer(() => {
     });
   };
 
-  async function asyncGetUsersMe() {
-    try {
-      const user = await userApi.getUsersMe();
-
-      console.log("me", user);
-
-      setCurrentUser(user);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   async function asyncGetUsers() {
     setIsLoading(true);
 
@@ -223,7 +211,6 @@ const UsersList = observer(() => {
   }
 
   useEffect(() => {
-    asyncGetUsersMe();
     asyncGetUsers();
   }, []);
 

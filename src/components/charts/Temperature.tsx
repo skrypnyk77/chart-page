@@ -190,116 +190,130 @@ export const Temperature = observer(({ system, params }) => {
     <>
       <Title style={{ marginBottom: "24px" }}>Temperature</Title>
 
-      <Space style={{ marginBottom: "16px" }}>
-        <Text style={{ width: "100px", display: "block" }}>Detalization</Text>
-        <Radio.Group
-          defaultValue="1d"
-          buttonStyle="solid"
-          value={filters.detalization || undefined}
-          onChange={onDetalizationChange}
-        >
-          <Radio.Button value="1w">Week</Radio.Button>
-          <Radio.Button defaultChecked value="1d">
-            Day
-          </Radio.Button>
-          <Radio.Button value="1h">Hour</Radio.Button>
-        </Radio.Group>
-      </Space>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <Space style={{ marginBottom: "16px" }}>
+          <Text style={{ width: "100px", display: "block" }}>Detalization</Text>
+          <Radio.Group
+            defaultValue="1d"
+            buttonStyle="solid"
+            value={filters.detalization || undefined}
+            onChange={onDetalizationChange}
+          >
+            <Radio.Button value="1w">Week</Radio.Button>
+            <Radio.Button defaultChecked value="1d">
+              Day
+            </Radio.Button>
+            <Radio.Button value="1h">Hour</Radio.Button>
+          </Radio.Group>
+        </Space>
 
-      <Space style={{ marginBottom: "16px" }}>
-        <Text style={{ width: "100px", display: "block" }}>Date [From/To]</Text>
-        <RangePicker
-          style={{
-            width: "360px",
-            flex: 1,
-          }}
-          renderExtraFooter={() => (
-            <Space>
-              <Button size="small" onClick={() => onQuickPresetChange("day")}>
-                Day
-              </Button>
-              <Button size="small" onClick={() => onQuickPresetChange("week")}>
-                7 Days
-              </Button>
-              <Button size="small" onClick={() => onQuickPresetChange("month")}>
-                30 Days
-              </Button>
-              <Button
-                size="small"
-                onClick={() => onQuickPresetChange("quarter")}
-              >
-                90 Days
-              </Button>
-            </Space>
-          )}
-          showTime={filters.detalization === "1h" ? true : false}
-          format={dateTimeFormat}
-          placeholder={["Start Date", "End Date"]}
-          value={[
-            moment(
-              filters["date[start]"] || defaultFilters["date[start]"],
-              dateTimeFormat
-            ),
-            moment(
-              filters["date[end]"] || defaultFilters["date[end]"],
-              dateTimeFormat
-            ),
-          ]}
-          onChange={onDateFromChange}
-        />
-      </Space>
+        <Space style={{ marginBottom: "16px" }}>
+          <Text style={{ width: "100px", display: "block" }}>
+            Date [From/To]
+          </Text>
+          <RangePicker
+            style={{
+              width: "360px",
+              flex: 1,
+            }}
+            renderExtraFooter={() => (
+              <Space>
+                <Button size="small" onClick={() => onQuickPresetChange("day")}>
+                  Day
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => onQuickPresetChange("week")}
+                >
+                  7 Days
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => onQuickPresetChange("month")}
+                >
+                  30 Days
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => onQuickPresetChange("quarter")}
+                >
+                  90 Days
+                </Button>
+              </Space>
+            )}
+            showTime={filters.detalization === "1h" ? true : false}
+            format={dateTimeFormat}
+            placeholder={["Start Date", "End Date"]}
+            value={[
+              moment(
+                filters["date[start]"] || defaultFilters["date[start]"],
+                dateTimeFormat
+              ),
+              moment(
+                filters["date[end]"] || defaultFilters["date[end]"],
+                dateTimeFormat
+              ),
+            ]}
+            onChange={onDateFromChange}
+          />
+        </Space>
 
-      <Space style={{ marginBottom: "16px" }}>
-        <Text style={{ width: "100px", display: "block" }}>Groups</Text>
-        <Select
-          showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) => (option?.name ?? "").includes(input)}
-          mode="multiple"
-          style={{
-            width: "360px",
-            flex: 1,
-          }}
-          value={filters.group || undefined}
-          options={groupsDataOptions}
-          placeholder="Select Group(s)"
-          onChange={handleChangeGroups}
-        />
-      </Space>
+        <Space style={{ marginBottom: "16px" }}>
+          <Text style={{ width: "100px", display: "block" }}>Groups</Text>
+          <Select
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.name ?? "").includes(input)
+            }
+            mode="multiple"
+            style={{
+              width: "360px",
+              flex: 1,
+            }}
+            value={filters.group || undefined}
+            options={groupsDataOptions}
+            placeholder="Select Group(s)"
+            onChange={handleChangeGroups}
+          />
+        </Space>
 
-      <Space style={{ marginBottom: "16px" }}>
-        <Text style={{ width: "100px", display: "block" }}>Lamps</Text>
-        <Select
-          showSearch
-          optionFilterProp="children"
-          filterOption={(input, option) => (option?.name ?? "").includes(input)}
-          mode="multiple"
-          style={{
-            width: "360px",
-            flex: 1,
-            overflowY: "auto",
-            maxHeight: "172px",
-          }}
-          value={filters.lamp || undefined}
-          options={lampsDataOptions}
-          placeholder="Select Lamp(s)"
-          onChange={handleChangeLamps}
-        />
-      </Space>
+        <Space style={{ marginBottom: "16px" }}>
+          <Text style={{ width: "100px", display: "block" }}>Lamps</Text>
+          <Select
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.name ?? "").includes(input)
+            }
+            mode="multiple"
+            style={{
+              width: "360px",
+              flex: 1,
+              overflowY: "auto",
+              maxHeight: "172px",
+            }}
+            value={filters.lamp || undefined}
+            options={lampsDataOptions}
+            placeholder="Select Lamp(s)"
+            onChange={handleChangeLamps}
+          />
+        </Space>
 
-      <Space>
-        <Button style={{ width: "100px" }} onClick={resetFilters}>
-          Reset
-        </Button>
+        <Space>
+          <Button style={{ width: "100px" }} onClick={resetFilters}>
+            Reset
+          </Button>
 
-        <Button
-          type="primary"
-          style={{ width: "100px" }}
-          onClick={submitFilters}
-        >
-          Search
-        </Button>
-      </Space>
+          <Button
+            type="primary"
+            style={{ width: "100px" }}
+            onClick={submitFilters}
+          >
+            Search
+          </Button>
+        </Space>
+      </div>
 
       <br />
 

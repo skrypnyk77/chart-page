@@ -7,6 +7,8 @@ import {
 import type { MenuProps } from "antd";
 import { Menu, Image } from "antd";
 
+import { useStores } from "../use-stores";
+
 import { useNavigate } from "react-router-dom";
 
 type MenuItem = Required<MenuProps>["items"][number];
@@ -27,14 +29,18 @@ function getItem(
   } as MenuItem;
 }
 
-const items: MenuProps["items"] = [
-  getItem("Dashboard", "dashboard", <HomeOutlined />),
-  getItem("Profile", "profile", <UserOutlined />),
-  getItem("Users", "users", <UsergroupDeleteOutlined />),
-];
-
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
+
+  const {
+    userStore: { isAdmin },
+  } = useStores();
+
+  const items: MenuProps["items"] = [
+    getItem("Dashboard", "dashboard", <HomeOutlined />),
+    getItem("Profile", "profile", <UserOutlined />),
+    isAdmin && getItem("Users", "users", <UsergroupDeleteOutlined />),
+  ];
 
   const onClick: MenuProps["onClick"] = (e) => {
     navigate(`/charts/${e.key}`);
@@ -52,7 +58,7 @@ const Sidebar: React.FC = () => {
         boxShadow: "0 0 10px 5px #bbb",
       }}
     >
-      <div style={{ margin: '20px 16px 20px 24px' }}>
+      <div style={{ margin: "20px 16px 20px 24px" }}>
         <Image
           width={140}
           height={38}

@@ -9,7 +9,8 @@ import { IlluminationDuration } from "../components/charts/IlluminationDuration"
 import { BatteryLevel } from "../components/charts/BatteryLevel";
 import { Temperature } from "../components/charts/Temperature";
 
-import { Layout } from "antd";
+import { Layout, Tabs } from "antd";
+import type { TabsProps } from "antd";
 
 const SingleSystem = observer(() => {
   let { id } = useParams();
@@ -51,25 +52,46 @@ const SingleSystem = observer(() => {
     getAdditionalInfoAboutSystem();
   }, []);
 
+  const items: TabsProps["items"] = [
+    {
+      key: "1",
+      label: "Battery Level vs Operation Time (Per Day)",
+      children: (
+        <CombineIlluminationDurationAndBatteryLevelPerDay system={id} />
+      ),
+    },
+    {
+      key: "2",
+      label: "Battery Level vs Operation Time (Weekly Per Hour)",
+      children: (
+        <CombineIlluminationDurationAndBatteryLevelPerHour system={id} />
+      ),
+    },
+    {
+      key: "3",
+      label: "Illumination Duration",
+      children: <IlluminationDuration system={id} params={params} />,
+    },
+    {
+      key: "4",
+      label: "Battery Level",
+      children: <BatteryLevel system={id} params={params} />,
+    },
+    {
+      key: "5",
+      label: "Temperature",
+      children: <Temperature system={id} params={params} />,
+    },
+  ];
+
   return (
     !isLoading && (
       <Layout style={{ padding: 20 }}>
-        <h1 style={{ fontSize: 40, fontWeight: "bold", paddingBottom: 50 }}>
+        <h1 style={{ fontSize: 40, fontWeight: "bold", marginBottom: 40 }}>
           {systemTitle || ""}
         </h1>
-        <CombineIlluminationDurationAndBatteryLevelPerDay system={id} />
-        <br />
-        <br />
-        <CombineIlluminationDurationAndBatteryLevelPerHour system={id} />
-        <br />
-        <br />
-        <IlluminationDuration system={id} params={params} />
-        <br />
-        <br />
-        <BatteryLevel system={id} params={params} />
-        <br />
-        <br />
-        <Temperature system={id} params={params} />
+
+        <Tabs defaultActiveKey="1" items={items} />
       </Layout>
     )
   );
