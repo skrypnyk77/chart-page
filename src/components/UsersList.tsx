@@ -246,12 +246,6 @@ const UsersList = observer(() => {
       editable: true,
     },
     {
-      title: "Password",
-      dataIndex: "password",
-      key: "password",
-      editable: true,
-    },
-    {
       title: "Roles",
       dataIndex: "roles",
       key: "roles",

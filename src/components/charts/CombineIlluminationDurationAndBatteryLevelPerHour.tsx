@@ -96,7 +96,7 @@ export const CombineIlluminationDurationAndBatteryLevelPerHour = observer(
             const el = item.name.split(" ")
 
             if (el[1] === "00:00") {
-              return el[0] + el[1]
+              return el[0] + ' ' + el[1]
             } else {
               return el[1]
             }

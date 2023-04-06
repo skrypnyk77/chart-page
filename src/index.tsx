@@ -13,6 +13,7 @@ import Auth from "./components/auth/Auth";
 import SystemsList from "./components/SystemsList";
 import UsersList from "./components/UsersList";
 import SingleSystem from "./components/SingleSystem";
+import Profile from "./components/Profile";
 import Sidebar from "./components/Sidebar";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -46,6 +47,7 @@ const App = observer(() => {
           ) : (
             <>
               <Route path="/charts/dashboard" element={<SystemsList />} />
+              <Route path="/charts/profile" element={<Profile />} />
               <Route path="/charts/dashboard/:id" element={<SingleSystem />} />
               <Route
                 path="*"

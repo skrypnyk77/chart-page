@@ -38,7 +38,7 @@ class UserApi {
   async updateUser(params: any) {
     const { id, ...rest } = params;
 
-    await apiClient.put(
+    await apiClient.patch(
       `/users/${id}`,
       {
         ...rest,

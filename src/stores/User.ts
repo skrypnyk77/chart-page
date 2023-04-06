@@ -2,8 +2,26 @@ import api from "../data/userApi";
 
 import { observable, makeObservable, action } from "mobx";
 
+interface CurrentUser {
+  id: number;
+  login: string;
+  roles: string[];
+  name: string;
+  note: string;
+  created_at: string;
+  modified_at: string;
+  available_systems: AvailableSystem[];
+}
+
+interface AvailableSystem {
+  code: string;
+  created_at: string;
+  id: number;
+  name: string;
+}
+
 class UserStore {
-  user = {};
+  user = {} as CurrentUser;
   authError = "";
   isLogged = false;
   isAdmin = false;
