@@ -3,6 +3,16 @@ import { useStores } from "../use-stores";
 import { observer } from "mobx-react";
 import { useNavigate } from "react-router-dom";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTowerBroadcast,
+  faCarBattery,
+  faBatteryFull,
+  faBatteryEmpty,
+  faTemperatureHalf,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
+
 import { Card, Layout, Typography, Row, Col, Spin } from "antd";
 
 const { Title } = Typography;
@@ -14,10 +24,20 @@ const SystemsList = observer(() => {
     userStore: { getMe },
     groupsStore: { getGroups },
     lampsStore: { getLamps },
-    systemsStore: { getSystems, systemsData, isLoading },
+    systemsStore: {
+      getSystems,
+      getHardCodeSystem,
+      hardCodeSystem,
+      systemsData,
+      isLoading,
+    },
   } = useStores();
 
   useEffect(() => {
+    async function asyncGetHardCodeSystem() {
+      await getHardCodeSystem();
+    }
+
     async function asyncGetMe() {
       await getMe();
     }
@@ -33,6 +53,7 @@ const SystemsList = observer(() => {
       await getSystems();
     }
 
+    asyncGetHardCodeSystem();
     asyncGetMe();
     asyncGetLamps();
     asyncGetGroups();
@@ -64,17 +85,110 @@ const SystemsList = observer(() => {
         <Row>
           {systemsData?.map((system) => {
             return (
-              <Col key={system.id} span={6}>
+              <Col style={{ display: "inline-grid" }} key={system.id} span={6}>
                 <Card
                   onClick={() => handleOpenSystem(system.id)}
                   hoverable
                   title={system.name}
                   bordered={false}
-                  style={{ marginBottom: 20, marginRight: 12 }}
+                  style={{ marginBottom: 20, marginRight: 12, minHeight: 210 }}
                 >
-                  <p>Id: {system.id}</p>
-                  <p>Groups: {system.groups_info.length}</p>
-                  <p>Total Devices: {system.total_devices}</p>
+                  {system.id === 4 ? (
+                    <div>
+                      <div>
+                        <FontAwesomeIcon
+                          icon={faTowerBroadcast}
+                          style={{ marginRight: 10 }}
+                        />{" "}
+                        Online: {hardCodeSystem?.devices}%
+                      </div>
+                      {hardCodeSystem?.ps_battery <= 1200 && (
+                        <div>
+                          <FontAwesomeIcon
+                            icon={faCarBattery}
+                            style={{ marginRight: 10 }}
+                          />{" "}
+                          Backup battery:{"  "}
+                          {hardCodeSystem.ps_battery >= 1025 &&
+                          hardCodeSystem.ps_battery <= 1200
+                            ? "OK"
+                            : "CRITICAL"}
+                        </div>
+                      )}
+                      <div>
+                        <FontAwesomeIcon
+                          icon={faBatteryFull}
+                          style={{ marginRight: 10 }}
+                          color={
+                            hardCodeSystem?.battery < 30
+                              ? "red"
+                              : hardCodeSystem?.battery > 65
+                              ? "green"
+                              : "orange"
+                          }
+                        />{" "}
+                        Battery: {hardCodeSystem?.battery}%
+                      </div>
+                      <div>
+                        <FontAwesomeIcon
+                          style={{ marginRight: 10 }}
+                          icon={faBatteryEmpty}
+                          color={
+                            hardCodeSystem?.batterydays < 60
+                              ? "red"
+                              : hardCodeSystem?.batterydays > 180
+                              ? "green"
+                              : "orange"
+                          }
+                        />{" "}
+                        Replace battery in {hardCodeSystem?.batterydays} days
+                      </div>
+                      <div>
+                        <FontAwesomeIcon
+                          style={{ marginRight: 17 }}
+                          icon={faTemperatureHalf}
+                          color={
+                            hardCodeSystem?.temperature < 65
+                              ? "red"
+                              : hardCodeSystem?.temperature > 75
+                              ? "green"
+                              : "orange"
+                          }
+                        />{" "}
+                        Temperature: {hardCodeSystem?.temperature}C
+                      </div>
+                      {hardCodeSystem?.emergency !== 0 && (
+                        <div>
+                          {" "}
+                          <FontAwesomeIcon
+                            style={{ marginRight: 10 }}
+                            icon={faTriangleExclamation}
+                          />{" "}
+                          Emergency mode ON
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div>
+                      {/* <div>Online: {system.available_devices}%</div>
+                      <div>
+                        Backup battery:{"  "}
+                        {system.available_devices < 1025
+                          ? "Critical"
+                          : system.available_devices > 1025 &&
+                            system.available_devices < 1200}
+                      </div>
+                      <div>Battery XX %</div>
+                      <div>Replcace battery in XXX days</div>
+                      <div>Temperature XX C</div>
+                      {system.emergency_mode && (
+                        <div>
+                          {"  "}
+                          Emergency mode ON
+                        </div>
+                      )} */}
+                    </div>
+                  )}
                 </Card>
               </Col>
             );

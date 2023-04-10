@@ -94,10 +94,6 @@ const Profile = observer(() => {
         }
       >
         <p>
-          <strong style={{ marginRight: 10 }}>ID:</strong>
-          {user.id}
-        </p>
-        <p>
           <strong style={{ marginRight: 10 }}>Login:</strong>
           {user.login}
         </p>

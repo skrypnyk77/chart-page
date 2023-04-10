@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { useParams } from "react-router-dom";
 import systemsApi from "../data/systemsApi";
+import { useStores } from "../use-stores";
 
 import { CombineIlluminationDurationAndBatteryLevelPerDay } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerDay";
 import { CombineIlluminationDurationAndBatteryLevelPerHour } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerHour";
@@ -9,11 +10,25 @@ import { IlluminationDuration } from "../components/charts/IlluminationDuration"
 import { BatteryLevel } from "../components/charts/BatteryLevel";
 import { Temperature } from "../components/charts/Temperature";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTowerBroadcast,
+  faCarBattery,
+  faBatteryFull,
+  faBatteryEmpty,
+  faTemperatureHalf,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
+
 import { Layout, Tabs } from "antd";
 import type { TabsProps } from "antd";
 
 const SingleSystem = observer(() => {
   let { id } = useParams();
+
+  const {
+    systemsStore: { hardCodeSystem },
+  } = useStores();
 
   const [isLoading, setIsLoading] = useState(true);
   const [systemTitle, setSystemTitle] = useState("");
@@ -90,6 +105,82 @@ const SingleSystem = observer(() => {
         <h1 style={{ fontSize: 40, fontWeight: "bold", marginBottom: 40 }}>
           {systemTitle || ""}
         </h1>
+        {id === "4" && (
+          <div style={{ marginBottom: 40, display: 'flex' }}>
+            <div style={{ marginRight: 40 }}>
+              <FontAwesomeIcon
+                icon={faTowerBroadcast}
+                style={{ marginRight: 10 }}
+              />{" "}
+              Online: {hardCodeSystem?.devices}%
+            </div>
+            {hardCodeSystem?.ps_battery <= 1200 && (
+              <div style={{ marginRight: 40 }}>
+                <FontAwesomeIcon
+                  icon={faCarBattery}
+                  style={{ marginRight: 10 }}
+                />{" "}
+                Backup battery:{"  "}
+                {hardCodeSystem.ps_battery >= 1025 &&
+                hardCodeSystem.ps_battery <= 1200
+                  ? "OK"
+                  : "CRITICAL"}
+              </div>
+            )}
+            <div style={{ marginRight: 40 }}>
+              <FontAwesomeIcon
+                icon={faBatteryFull}
+                style={{ marginRight: 10 }}
+                color={
+                  hardCodeSystem?.battery < 30
+                    ? "red"
+                    : hardCodeSystem?.battery > 65
+                    ? "green"
+                    : "orange"
+                }
+              />{" "}
+              Battery: {hardCodeSystem?.battery}%
+            </div>
+            <div style={{ marginRight: 40 }}>
+              <FontAwesomeIcon
+                style={{ marginRight: 10 }}
+                icon={faBatteryEmpty}
+                color={
+                  hardCodeSystem?.batterydays < 60
+                    ? "red"
+                    : hardCodeSystem?.batterydays > 180
+                    ? "green"
+                    : "orange"
+                }
+              />{" "}
+              Replace battery in {hardCodeSystem?.batterydays} days
+            </div>
+            <div style={{ marginRight: 40 }}>
+              <FontAwesomeIcon
+                style={{ marginRight: 17 }}
+                icon={faTemperatureHalf}
+                color={
+                  hardCodeSystem?.temperature < 65
+                    ? "red"
+                    : hardCodeSystem?.temperature > 75
+                    ? "green"
+                    : "orange"
+                }
+              />{" "}
+              Temperature: {hardCodeSystem?.temperature}C
+            </div>
+            {hardCodeSystem?.emergency !== 0 && (
+              <div style={{ marginRight: 40 }}>
+                {" "}
+                <FontAwesomeIcon
+                  style={{ marginRight: 10 }}
+                  icon={faTriangleExclamation}
+                />{" "}
+                Emergency mode ON
+              </div>
+            )}
+          </div>
+        )}
 
         <Tabs defaultActiveKey="1" items={items} />
       </Layout>

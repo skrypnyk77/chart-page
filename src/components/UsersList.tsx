@@ -73,14 +73,26 @@ const UsersList = observer(() => {
 
     const available_systems = [];
 
-    values.available_systems.forEach((system) =>
-      available_systems.push(`/api/systems/${system}`)
-    );
+    if (!editMode) {
+      values.available_systems.forEach((system) =>
+        available_systems.push(`/api/systems/${system}`)
+      );
+    }
 
-    await asyncCreateUser({
-      ...values,
-      available_systems: available_systems,
-    });
+    editMode
+      ? await asyncUpdateUser({
+          id: 18,
+          login: "johndoe",
+          roles: ["ROLE_USER"],
+          password: "string",
+          name: "John Doe",
+          note: "string",
+          available_systems: ["/api/systems/4"],
+        })
+      : await asyncCreateUser({
+          ...values,
+          available_systems: available_systems,
+        });
 
     await asyncGetUsers();
 
@@ -145,18 +157,9 @@ const UsersList = observer(() => {
 
   async function asyncUpdateUser(record: Item) {
     try {
-      const row = (await form.validateFields()) as Item;
+      // const row = (await form.validateFields()) as Item;
 
-      await userApi.updateUser({
-        id: record.id,
-        ...row,
-        login: "johndoe",
-        roles: ["ROLE_USER"],
-        password: "string",
-        name: "John Doe",
-        note: "string",
-        available_systems: [1],
-      });
+      await userApi.updateUser(record);
 
       await asyncGetUsers();
     } catch (error) {

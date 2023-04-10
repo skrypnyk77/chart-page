@@ -8,4 +8,12 @@ module.exports = function (app) {
       changeOrigin: true,
     })
   );
+
+  app.use(
+    "/stats",
+    createProxyMiddleware({
+      target: "http://monitoring.s4ga.tech",
+      changeOrigin: true,
+    })
+  );
 };
