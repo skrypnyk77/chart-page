@@ -3,7 +3,9 @@ import { observer } from "mobx-react";
 import { useStores } from "../use-stores";
 import userApi from "../data/userApi";
 
-import { Layout, Card, Button, Modal, Form, Input } from "antd";
+import { notification, Layout, Card, Button, Modal, Form, Input } from "antd";
+
+type NotificationType = "success" | "error";
 
 const Profile = observer(() => {
   const {
@@ -11,18 +13,33 @@ const Profile = observer(() => {
   } = useStores();
 
   const [key, setKey] = useState(0);
+  const [api, contextHolder] = notification.useNotification();
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+
+  const openNotificationWithIcon = (
+    type: NotificationType,
+    description: string
+  ) => {
+    api[type]({
+      message: type.charAt(0).toUpperCase() + type.slice(1),
+      description: description,
+    });
+  };
 
   const onFinish = async (values: any) => {
     console.log("Success:", values);
 
-    await userApi.updateUser({ ...user, ...values });
+    console.log(values);
+
+    await userApi.updateUser({ ...values, id: user.id });
 
     await getMe();
 
     setKey(key + 1);
 
     setShowChangePasswordModal(false);
+
+    openNotificationWithIcon("success", "You succesfully changed the password");
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -31,6 +48,8 @@ const Profile = observer(() => {
 
   return (
     <Layout style={{ padding: 20 }}>
+      {contextHolder}
+      
       <Modal
         title="Create User"
         open={showChangePasswordModal}
@@ -66,7 +85,10 @@ const Profile = observer(() => {
       <Card
         title={user.name}
         extra={
-          <Button onClick={() => setShowChangePasswordModal(true)} type="primary">
+          <Button
+            onClick={() => setShowChangePasswordModal(true)}
+            type="primary"
+          >
             Change Password
           </Button>
         }

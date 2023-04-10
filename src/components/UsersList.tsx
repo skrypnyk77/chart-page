@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import userApi from "../data/userApi";
+import { useStores } from "../use-stores";
 
 import {
   notification,
@@ -8,7 +9,6 @@ import {
   Typography,
   Form,
   Input,
-  InputNumber,
   Popconfirm,
   Space,
   Table,
@@ -50,64 +50,36 @@ interface Item {
   roles: string[];
 }
 
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-  editing: boolean;
-  dataIndex: string;
-  title: any;
-  inputType: "number" | "text";
-  record: Item;
-  index: number;
-  children: React.ReactNode;
-}
-
-const EditableCell: React.FC<EditableCellProps> = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
-
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{ margin: 0 }}
-          rules={[
-            {
-              required: true,
-              message: `Please Input ${title}!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
-
 const UsersList = observer(() => {
+  const {
+    systemsStore: { systemsData },
+  } = useStores();
+
+  const systemsOptions = systemsData.map((item) => {
+    return { id: item.id, value: item.id, label: item.name };
+  });
+
   const [form] = Form.useForm();
   const [key, setKey] = useState(0);
-  const [editingKey, setEditingKey] = useState("");
-  const [currentUser, setCurrentUser] = useState<CurrentUser>({});
+
+  // const [currentUser, setCurrentUser] = useState<CurrentUser>({});
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   const onFinish = async (values: any) => {
     console.log("Success:", values);
 
+    const available_systems = [];
+
+    values.available_systems.forEach((system) =>
+      available_systems.push(`/api/systems/${system}`)
+    );
+
     await asyncCreateUser({
       ...values,
+      available_systems: available_systems,
     });
 
     await asyncGetUsers();
@@ -120,8 +92,6 @@ const UsersList = observer(() => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
-
-  const isEditing = (record: Item) => record.key === editingKey;
 
   const [api, contextHolder] = notification.useNotification();
 
@@ -189,8 +159,6 @@ const UsersList = observer(() => {
       });
 
       await asyncGetUsers();
-
-      setEditingKey("");
     } catch (error) {
       console.log(error);
     }
@@ -213,18 +181,6 @@ const UsersList = observer(() => {
   useEffect(() => {
     asyncGetUsers();
   }, []);
-
-  const editRow = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({
-      ...record,
-    });
-
-    setEditingKey(record.key);
-  };
-
-  const cancelRowUpdates = () => {
-    setEditingKey("");
-  };
 
   const columns = [
     {
@@ -277,25 +233,13 @@ const UsersList = observer(() => {
       key: "operation",
       width: "160px",
       render: (_: any, record: Item) => {
-        const editable = isEditing(record);
-
-        return editable ? (
-          <span>
-            <Typography.Link
-              onClick={() => asyncUpdateUser(record)}
-              style={{ marginRight: 8 }}
-            >
-              Update
-            </Typography.Link>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancelRowUpdates}>
-              <a>Cancel</a>
-            </Popconfirm>
-          </span>
-        ) : (
+        return (
           <Space>
             <Typography.Link
-              disabled={editingKey !== ""}
-              onClick={() => editRow(record)}
+              onClick={() => {
+                setIsModalOpen(true);
+                setEditMode(true);
+              }}
             >
               Edit
             </Typography.Link>
@@ -311,23 +255,6 @@ const UsersList = observer(() => {
     },
   ];
 
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-
-    return {
-      ...col,
-      onCell: (record: Item) => ({
-        record,
-        inputType: col.dataIndex === "age" ? "number" : "text",
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-      }),
-    };
-  });
-
   return (
     <Layout style={{ padding: 20 }}>
       {contextHolder}
@@ -340,12 +267,15 @@ const UsersList = observer(() => {
         <Button
           style={{ width: "120px" }}
           type="primary"
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setIsModalOpen(true);
+            setEditMode(false);
+          }}
         >
           Create User
         </Button>
         <Modal
-          title="Create User"
+          title={editMode ? "Edit User" : "Create User"}
           open={isModalOpen}
           onCancel={() => setIsModalOpen(false)}
           footer={null}
@@ -392,6 +322,7 @@ const UsersList = observer(() => {
             <Form.Item label="Roles" name="roles">
               <Select
                 showSearch={false}
+                showArrow
                 placeholder="Select Role(s)"
                 mode="multiple"
                 options={[
@@ -405,13 +336,16 @@ const UsersList = observer(() => {
               <Select
                 placeholder="Select System(s)"
                 mode="multiple"
-                options={[]}
+                showSearch
+                showArrow
+                optionFilterProp="label"
+                options={systemsOptions}
               />
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
               <Button type="primary" htmlType="submit">
-                Create
+                {editMode ? "Edit" : "Create"}
               </Button>
             </Form.Item>
           </Form>
@@ -431,16 +365,7 @@ const UsersList = observer(() => {
         </div>
       ) : (
         <Form form={form} component={false}>
-          <Table
-            components={{
-              body: {
-                cell: EditableCell,
-              },
-            }}
-            bordered
-            dataSource={users}
-            columns={mergedColumns}
-          />
+          <Table bordered dataSource={users} columns={columns} />
         </Form>
       )}
     </Layout>
