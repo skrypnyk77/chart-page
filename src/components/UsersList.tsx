@@ -18,6 +18,8 @@ import {
   Select,
 } from "antd";
 
+// import Login from "./form/Login";
+
 const { Title } = Typography;
 
 type NotificationType = "success" | "error";
@@ -48,6 +50,8 @@ interface Item {
   login: string;
   modified_at: string;
   roles: string[];
+  name: string;
+  note: string;
 }
 
 const UsersList = observer(() => {
@@ -242,6 +246,22 @@ const UsersList = observer(() => {
               onClick={() => {
                 setIsModalOpen(true);
                 setEditMode(true);
+
+                let roles = [];
+
+                record.roles?.forEach((item) =>
+                  roles.push({ value: item, label: item })
+                );
+
+                form.setFieldsValue({
+                  id: record.id,
+                  login: record.login,
+                  password: "",
+                  name: record.name,
+                  note: "",
+                  roles: roles,
+                  available_systems: record.available_systems,
+                });
               }}
             >
               Edit
@@ -289,7 +309,6 @@ const UsersList = observer(() => {
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 18 }}
             style={{ maxWidth: 600 }}
-            initialValues={{ remember: true }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"

@@ -92,7 +92,7 @@ const SystemsList = observer(() => {
                   hoverable
                   title={system.name}
                   bordered={false}
-                  style={{ marginBottom: 20, marginRight: 12, minHeight: 210 }}
+                  style={{ marginBottom: 20, marginRight: 12, minHeight: 210, fontSize: 13 }}
                 >
                   {system.id === 4 ? (
                     <div>
@@ -138,7 +138,7 @@ const SystemsList = observer(() => {
                               : "orange"
                           }
                         />{" "}
-                        Battery Level Devices: {hardCodeSystem?.battery}%
+                        Avg. Battery Level Devices: {hardCodeSystem?.battery}%
                       </div>
                       <div>
                         <FontAwesomeIcon
@@ -166,7 +166,7 @@ const SystemsList = observer(() => {
                               : "orange"
                           }
                         />{" "}
-                        Temperature Devices: {hardCodeSystem?.temperature}C
+                        Avg. Temperature Devices: {hardCodeSystem?.temperature}C
                       </div>
                       {hardCodeSystem?.emergency !== 0 && (
                         <div>

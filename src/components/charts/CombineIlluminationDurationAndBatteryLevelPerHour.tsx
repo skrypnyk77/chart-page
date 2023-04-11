@@ -49,9 +49,13 @@ export const CombineIlluminationDurationAndBatteryLevelPerHour = observer(
           setBatteryLevel(batteryLevel);
 
           const illuminationDuration =
-            await illuminationApi.getIlluminationDuration({
-              ...defaultIlluminationDurationWeekFilters,
-            });
+            system === "4"
+              ? await illuminationApi.getNZIllumination({
+                  ...defaultIlluminationDurationWeekFilters,
+                })
+              : await illuminationApi.getIlluminationDuration({
+                  ...defaultIlluminationDurationWeekFilters,
+                });
 
           const minutesMapped = illuminationDuration.map((item) => {
             return {
@@ -93,12 +97,12 @@ export const CombineIlluminationDurationAndBatteryLevelPerHour = observer(
       xAxis: {
         label: {
           formatter: (text: string, item: any, index: number) => {
-            const el = item.name.split(" ")
+            const el = item.name.split(" ");
 
             if (el[1] === "00:00") {
-              return el[0] + ' ' + el[1]
+              return el[0] + " " + el[1];
             } else {
-              return el[1]
+              return el[1];
             }
           },
           style: {

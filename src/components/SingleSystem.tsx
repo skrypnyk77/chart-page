@@ -83,7 +83,7 @@ const SingleSystem = observer(() => {
         <CombineIlluminationDurationAndBatteryLevelPerHour system={id} />
       ),
     },
-    {
+    id !== "4" && {
       key: "3",
       label: "Illumination Duration",
       children: <IlluminationDuration system={id} params={params} />,
@@ -150,7 +150,7 @@ const SingleSystem = observer(() => {
                     : "orange"
                 }
               />{" "}
-              Battery Level Devices: {hardCodeSystem?.battery}%
+              Avg. Battery Level Devices: {hardCodeSystem?.battery}%
             </div>
             <div style={{ marginRight: 30 }}>
               <FontAwesomeIcon
@@ -178,7 +178,7 @@ const SingleSystem = observer(() => {
                     : "orange"
                 }
               />{" "}
-              Temperature Devices: {hardCodeSystem?.temperature}C
+              Avg. Temperature Devices: {hardCodeSystem?.temperature}C
             </div>
             {hardCodeSystem?.emergency !== 0 && (
               <div>
