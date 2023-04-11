@@ -15,6 +15,7 @@ import {
   faTowerBroadcast,
   faCarBattery,
   faBatteryFull,
+  faPlug,
   faBatteryEmpty,
   faTemperatureHalf,
   faTriangleExclamation,
@@ -106,28 +107,38 @@ const SingleSystem = observer(() => {
           {systemTitle || ""}
         </h1>
         {id === "4" && (
-          <div style={{ marginBottom: 40, display: 'flex' }}>
-            <div style={{ marginRight: 40 }}>
+          <div style={{ marginBottom: 40, display: "flex" }}>
+            <div style={{ marginRight: 30 }}>
               <FontAwesomeIcon
                 icon={faTowerBroadcast}
                 style={{ marginRight: 10 }}
               />{" "}
-              Online: {hardCodeSystem?.devices}%
+              Online Devices: {hardCodeSystem?.devices}%
             </div>
             {hardCodeSystem?.ps_battery <= 1200 && (
-              <div style={{ marginRight: 40 }}>
-                <FontAwesomeIcon
-                  icon={faCarBattery}
-                  style={{ marginRight: 10 }}
-                />{" "}
-                Backup battery:{"  "}
-                {hardCodeSystem.ps_battery >= 1025 &&
-                hardCodeSystem.ps_battery <= 1200
-                  ? "OK"
-                  : "CRITICAL"}
+              <div>
+                <div style={{ marginRight: 30 }}>
+                  <FontAwesomeIcon
+                    icon={faCarBattery}
+                    style={{ marginRight: 10 }}
+                  />{" "}
+                  Backup battery:{"  "}
+                  {hardCodeSystem.ps_battery >= 1025 &&
+                  hardCodeSystem.ps_battery <= 1200
+                    ? "OK"
+                    : "CRITICAL"}
+                </div>
+                <div>
+                  <FontAwesomeIcon
+                    icon={faPlug}
+                    color={"red"}
+                    style={{ marginRight: 14 }}
+                  />{" "}
+                  <span style={{ color: "red" }}>AC Power Fail</span>
+                </div>
               </div>
             )}
-            <div style={{ marginRight: 40 }}>
+            <div style={{ marginRight: 30 }}>
               <FontAwesomeIcon
                 icon={faBatteryFull}
                 style={{ marginRight: 10 }}
@@ -139,9 +150,9 @@ const SingleSystem = observer(() => {
                     : "orange"
                 }
               />{" "}
-              Battery: {hardCodeSystem?.battery}%
+              Battery Level Devices: {hardCodeSystem?.battery}%
             </div>
-            <div style={{ marginRight: 40 }}>
+            <div style={{ marginRight: 30 }}>
               <FontAwesomeIcon
                 style={{ marginRight: 10 }}
                 icon={faBatteryEmpty}
@@ -155,9 +166,9 @@ const SingleSystem = observer(() => {
               />{" "}
               Replace battery in {hardCodeSystem?.batterydays} days
             </div>
-            <div style={{ marginRight: 40 }}>
+            <div style={{ marginRight: 30 }}>
               <FontAwesomeIcon
-                style={{ marginRight: 17 }}
+                style={{ marginRight: 10 }}
                 icon={faTemperatureHalf}
                 color={
                   hardCodeSystem?.temperature < 65
@@ -167,10 +178,10 @@ const SingleSystem = observer(() => {
                     : "orange"
                 }
               />{" "}
-              Temperature: {hardCodeSystem?.temperature}C
+              Temperature Devices: {hardCodeSystem?.temperature}C
             </div>
             {hardCodeSystem?.emergency !== 0 && (
-              <div style={{ marginRight: 40 }}>
+              <div>
                 {" "}
                 <FontAwesomeIcon
                   style={{ marginRight: 10 }}

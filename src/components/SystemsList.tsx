@@ -8,6 +8,7 @@ import {
   faTowerBroadcast,
   faCarBattery,
   faBatteryFull,
+  faPlug,
   faBatteryEmpty,
   faTemperatureHalf,
   faTriangleExclamation,
@@ -98,21 +99,31 @@ const SystemsList = observer(() => {
                       <div>
                         <FontAwesomeIcon
                           icon={faTowerBroadcast}
-                          style={{ marginRight: 10 }}
+                          style={{ marginRight: 8 }}
                         />{" "}
-                        Online: {hardCodeSystem?.devices}%
+                        Online Devices: {hardCodeSystem?.devices}%
                       </div>
                       {hardCodeSystem?.ps_battery <= 1200 && (
                         <div>
-                          <FontAwesomeIcon
-                            icon={faCarBattery}
-                            style={{ marginRight: 10 }}
-                          />{" "}
-                          Backup battery:{"  "}
-                          {hardCodeSystem.ps_battery >= 1025 &&
-                          hardCodeSystem.ps_battery <= 1200
-                            ? "OK"
-                            : "CRITICAL"}
+                          <div>
+                            <FontAwesomeIcon
+                              icon={faCarBattery}
+                              style={{ marginRight: 10 }}
+                            />{" "}
+                            Backup battery:{"  "}
+                            {hardCodeSystem.ps_battery >= 1025 &&
+                            hardCodeSystem.ps_battery <= 1200
+                              ? "OK"
+                              : "CRITICAL"}
+                          </div>
+                          <div>
+                            <FontAwesomeIcon
+                              icon={faPlug}
+                              color={"red"}
+                              style={{ marginRight: 14 }}
+                            />{" "}
+                            <span style={{ color: "red" }}>AC Power Fail</span>
+                          </div>
                         </div>
                       )}
                       <div>
@@ -127,7 +138,7 @@ const SystemsList = observer(() => {
                               : "orange"
                           }
                         />{" "}
-                        Battery: {hardCodeSystem?.battery}%
+                        Battery Level Devices: {hardCodeSystem?.battery}%
                       </div>
                       <div>
                         <FontAwesomeIcon
@@ -155,7 +166,7 @@ const SystemsList = observer(() => {
                               : "orange"
                           }
                         />{" "}
-                        Temperature: {hardCodeSystem?.temperature}C
+                        Temperature Devices: {hardCodeSystem?.temperature}C
                       </div>
                       {hardCodeSystem?.emergency !== 0 && (
                         <div>

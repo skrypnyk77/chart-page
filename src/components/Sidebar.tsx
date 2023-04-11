@@ -58,7 +58,7 @@ const Sidebar: React.FC = () => {
         boxShadow: "0 0 10px 5px #bbb",
       }}
     >
-      <div style={{ margin: "20px 16px 20px 24px" }}>
+      <div style={{ margin: 20 }}>
         <Image
           width={140}
           height={38}

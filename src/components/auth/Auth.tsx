@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Button, Form, Input, Divider } from "antd";
+import { Layout, Button, Form, Input, Divider, Image } from "antd";
 
 import { observer } from "mobx-react";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +24,12 @@ const Auth = observer(() => {
 
   return (
     <Layout
-      style={{ height: "100%", display: "flex", justifyContent: "center", paddingRight: 220 }}
+      style={{
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        paddingRight: 220,
+      }}
     >
       <Form
         name="basic"
@@ -34,7 +39,17 @@ const Auth = observer(() => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <h1>Authorization</h1>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Image
+            width={160}
+            height={46}
+            preview={false}
+            src="https://solutions4ga.com/wp-content/themes/wi/images/logo.png"
+          />
+        </div>
+        <h1 style={{ marginTop: 20, textAlign: "center" }}>
+          S4GA Online Monitoring Tool
+        </h1>
         <Divider />
         <Form.Item
           label=""
