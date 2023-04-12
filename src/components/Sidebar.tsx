@@ -49,7 +49,7 @@ const Sidebar: React.FC = () => {
   return (
     <div
       style={{
-        width: 180,
+        width: 200,
         background: "#ffffff",
         position: "fixed",
         left: 0,
@@ -58,10 +58,8 @@ const Sidebar: React.FC = () => {
         boxShadow: "0 0 10px 5px #bbb",
       }}
     >
-      <div style={{ margin: 20 }}>
+      <div style={{ margin: "20px 13px" }}>
         <Image
-          width={140}
-          height={38}
           preview={false}
           src="https://solutions4ga.com/wp-content/themes/wi/images/logo.png"
         />

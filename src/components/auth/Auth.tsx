@@ -41,8 +41,6 @@ const Auth = observer(() => {
       >
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Image
-            width={160}
-            height={46}
             preview={false}
             src="https://solutions4ga.com/wp-content/themes/wi/images/logo.png"
           />
