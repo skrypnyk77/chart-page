@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useStores } from "../use-stores";
 import { observer } from "mobx-react";
 import { useNavigate } from "react-router-dom";
+import systemsApi from "../data/systemsApi";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -25,18 +26,19 @@ const SystemsList = observer(() => {
     userStore: { getMe },
     groupsStore: { getGroups },
     lampsStore: { getLamps },
-    systemsStore: {
-      getSystems,
-      getHardCodeSystem,
-      hardCodeSystem,
-      systemsData,
-      isLoading,
-    },
+    systemsStore: { getSystems, systemsData, isLoading },
   } = useStores();
+
+  const [system4, setSystem4] = useState({});
+  const [system20, setSystem20] = useState({});
 
   useEffect(() => {
     async function asyncGetHardCodeSystem() {
-      await getHardCodeSystem();
+      const systemData4 = await systemsApi.getAnotherSystem("4");
+      setSystem4(systemData4);
+
+      const systemData20 = await systemsApi.getAnotherSystem("20");
+      setSystem20(systemData20);
     }
 
     async function asyncGetMe() {
@@ -92,7 +94,12 @@ const SystemsList = observer(() => {
                   hoverable
                   title={system.name}
                   bordered={false}
-                  style={{ marginBottom: 20, marginRight: 12, minHeight: 210, fontSize: 13 }}
+                  style={{
+                    marginBottom: 20,
+                    marginRight: 12,
+                    minHeight: 210,
+                    fontSize: 13,
+                  }}
                 >
                   {system.id === 4 ? (
                     <div>
@@ -101,9 +108,9 @@ const SystemsList = observer(() => {
                           icon={faTowerBroadcast}
                           style={{ marginRight: 8 }}
                         />{" "}
-                        Online Devices: {hardCodeSystem?.devices}%
+                        Online Devices: {system4?.devices}%
                       </div>
-                      {hardCodeSystem?.ps_battery <= 1200 && (
+                      {system4?.ps_battery <= 1200 && (
                         <div>
                           <div>
                             <FontAwesomeIcon
@@ -111,8 +118,8 @@ const SystemsList = observer(() => {
                               style={{ marginRight: 10 }}
                             />{" "}
                             Backup battery:{"  "}
-                            {hardCodeSystem.ps_battery >= 1025 &&
-                            hardCodeSystem.ps_battery <= 1200
+                            {system4.ps_battery >= 1025 &&
+                            system4.ps_battery <= 1200
                               ? "OK"
                               : "CRITICAL"}
                           </div>
@@ -131,44 +138,129 @@ const SystemsList = observer(() => {
                           icon={faBatteryFull}
                           style={{ marginRight: 10 }}
                           color={
-                            hardCodeSystem?.battery < 30
+                            system4?.battery < 30
                               ? "red"
-                              : hardCodeSystem?.battery > 65
+                              : system4?.battery > 65
                               ? "green"
                               : "orange"
                           }
                         />{" "}
-                        Avg. Battery Level Devices: {hardCodeSystem?.battery}%
+                        Avg. Battery Level Devices: {system4?.battery}%
                       </div>
                       <div>
                         <FontAwesomeIcon
                           style={{ marginRight: 10 }}
                           icon={faBatteryEmpty}
                           color={
-                            hardCodeSystem?.batterydays < 60
+                            system4?.batterydays < 60
                               ? "red"
-                              : hardCodeSystem?.batterydays > 180
+                              : system4?.batterydays > 180
                               ? "green"
                               : "orange"
                           }
                         />{" "}
-                        Replace battery in {hardCodeSystem?.batterydays} days
+                        Replace battery in {system4?.batterydays} days
                       </div>
                       <div>
                         <FontAwesomeIcon
                           style={{ marginRight: 17 }}
                           icon={faTemperatureHalf}
                           color={
-                            hardCodeSystem?.temperature < 65
+                            system4?.temperature < 65
                               ? "red"
-                              : hardCodeSystem?.temperature > 75
+                              : system4?.temperature > 75
                               ? "green"
                               : "orange"
                           }
                         />{" "}
-                        Avg. Temperature Devices: {hardCodeSystem?.temperature}C
+                        Avg. Temperature Devices: {system4?.temperature}C
                       </div>
-                      {hardCodeSystem?.emergency !== 0 && (
+                      {system4?.emergency !== 0 && (
+                        <div>
+                          {" "}
+                          <FontAwesomeIcon
+                            style={{ marginRight: 10 }}
+                            icon={faTriangleExclamation}
+                          />{" "}
+                          Emergency mode ON
+                        </div>
+                      )}
+                    </div>
+                  ) : system.id === 20 ? (
+                    <div>
+                      <div>
+                        <FontAwesomeIcon
+                          icon={faTowerBroadcast}
+                          style={{ marginRight: 8 }}
+                        />{" "}
+                        Online Devices: {system20?.devices}%
+                      </div>
+                      {system20?.ps_battery <= 1200 && (
+                        <div>
+                          <div>
+                            <FontAwesomeIcon
+                              icon={faCarBattery}
+                              style={{ marginRight: 10 }}
+                            />{" "}
+                            Backup battery:{"  "}
+                            {system20.ps_battery >= 1025 &&
+                            system20.ps_battery <= 1200
+                              ? "OK"
+                              : "CRITICAL"}
+                          </div>
+                          <div>
+                            <FontAwesomeIcon
+                              icon={faPlug}
+                              color={"red"}
+                              style={{ marginRight: 14 }}
+                            />{" "}
+                            <span style={{ color: "red" }}>AC Power Fail</span>
+                          </div>
+                        </div>
+                      )}
+                      <div>
+                        <FontAwesomeIcon
+                          icon={faBatteryFull}
+                          style={{ marginRight: 10 }}
+                          color={
+                            system20?.battery < 30
+                              ? "red"
+                              : system20?.battery > 65
+                              ? "green"
+                              : "orange"
+                          }
+                        />{" "}
+                        Avg. Battery Level Devices: {system20?.battery}%
+                      </div>
+                      <div>
+                        <FontAwesomeIcon
+                          style={{ marginRight: 10 }}
+                          icon={faBatteryEmpty}
+                          color={
+                            system20?.batterydays < 60
+                              ? "red"
+                              : system20?.batterydays > 180
+                              ? "green"
+                              : "orange"
+                          }
+                        />{" "}
+                        Replace battery in {system20?.batterydays} days
+                      </div>
+                      <div>
+                        <FontAwesomeIcon
+                          style={{ marginRight: 17 }}
+                          icon={faTemperatureHalf}
+                          color={
+                            system20?.temperature < 65
+                              ? "red"
+                              : system20?.temperature > 75
+                              ? "green"
+                              : "orange"
+                          }
+                        />{" "}
+                        Avg. Temperature Devices: {system20?.temperature}C
+                      </div>
+                      {system20?.emergency !== 0 && (
                         <div>
                           {" "}
                           <FontAwesomeIcon

@@ -1,9 +1,9 @@
 import { apiClient, statsClient } from "./httpClient";
 
 class SystemsApi {
-  async getNZSystem() {
+  async getAnotherSystem(id: string) {
     try {
-      const { data } = await statsClient.get("/stats/4/stats.php");
+      const { data } = await statsClient.get(`/stats/4/stats.php?system=${id}`);
 
       return data;
     } catch (err) {

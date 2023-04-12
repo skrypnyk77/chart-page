@@ -27,13 +27,10 @@ import type { TabsProps } from "antd";
 const SingleSystem = observer(() => {
   let { id } = useParams();
 
-  const {
-    systemsStore: { hardCodeSystem },
-  } = useStores();
-
   const [isLoading, setIsLoading] = useState(true);
   const [systemTitle, setSystemTitle] = useState("");
   const [params, setParams] = useState({});
+  const [hardCodeSystem, setHardCodeSystem] = useState({});
 
   const getAdditionalInfoAboutSystem = async (): Promise<void> => {
     try {
@@ -64,7 +61,21 @@ const SingleSystem = observer(() => {
     setIsLoading(false);
   };
 
+  const getAnotherSystemData = async (): Promise<void> => {
+    try {
+      const hardCodeSystemData = await systemsApi.getAnotherSystem(id);
+
+      setHardCodeSystem(hardCodeSystemData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    if (id === "4" || id === "20") {
+      getAnotherSystemData();
+    }
+
     getAdditionalInfoAboutSystem();
   }, []);
 
@@ -83,11 +94,12 @@ const SingleSystem = observer(() => {
         <CombineIlluminationDurationAndBatteryLevelPerHour system={id} />
       ),
     },
-    id !== "4" && {
-      key: "3",
-      label: "Illumination Duration",
-      children: <IlluminationDuration system={id} params={params} />,
-    },
+    id !== "4" &&
+      id !== "20" && {
+        key: "3",
+        label: "Illumination Duration",
+        children: <IlluminationDuration system={id} params={params} />,
+      },
     {
       key: "4",
       label: "Battery Level",
@@ -106,7 +118,7 @@ const SingleSystem = observer(() => {
         <h1 style={{ fontSize: 40, fontWeight: "bold", marginBottom: 40 }}>
           {systemTitle || ""}
         </h1>
-        {id === "4" && (
+        {(id === "4" || id === "20") && (
           <div style={{ marginBottom: 40, display: "flex" }}>
             <div style={{ marginRight: 30 }}>
               <FontAwesomeIcon

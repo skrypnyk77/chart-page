@@ -49,7 +49,7 @@ export const CombineIlluminationDurationAndBatteryLevelPerDay = observer(
           setBatteryLevel(batteryLevel);
 
           const illuminationDuration =
-            system === "4"
+            system === "4" || system === '20'
               ? await illuminationApi.getNZIllumination({
                   ...defaultIlluminationDurationWeekFilters,
                 })
