@@ -18,22 +18,9 @@ import {
   Select,
 } from "antd";
 
-// import Login from "./form/Login";
-
 const { Title } = Typography;
 
 type NotificationType = "success" | "error";
-
-interface CurrentUser {
-  id: number;
-  login: string;
-  roles: string[];
-  name: string;
-  note: string;
-  created_at: string;
-  modified_at: string;
-  available_systems: AvailableSystem[];
-}
 
 interface AvailableSystem {
   code: string;
@@ -66,11 +53,12 @@ const UsersList = observer(() => {
   const [form] = Form.useForm();
   const [key, setKey] = useState(0);
 
-  // const [currentUser, setCurrentUser] = useState<CurrentUser>({});
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
+
+  const [initialValues, setInitialValues] = useState({});
 
   const onFinish = async (values: any) => {
     console.log("Success:", values);
@@ -81,17 +69,21 @@ const UsersList = observer(() => {
       values.available_systems.forEach((system) =>
         available_systems.push(`/api/systems/${system}`)
       );
+    } else {
+      values.available_systems.forEach((system) => {
+        if (system?.value) {
+          available_systems.push(`/api/systems/${system.value}`);
+        } else {
+          available_systems.push(`/api/systems/${system}`);
+        }
+      });
     }
 
     editMode
       ? await asyncUpdateUser({
-          id: 18,
-          login: "johndoe",
-          roles: ["ROLE_USER"],
-          password: "string",
-          name: "John Doe",
-          note: "string",
-          available_systems: ["/api/systems/4"],
+          ...values,
+          available_systems: available_systems,
+          id: initialValues.id,
         })
       : await asyncCreateUser({
           ...values,
@@ -160,15 +152,21 @@ const UsersList = observer(() => {
   }
 
   async function asyncUpdateUser(record: Item) {
-    try {
-      // const row = (await form.validateFields()) as Item;
+    setIsLoading(true);
 
+    try {
       await userApi.updateUser(record);
 
       await asyncGetUsers();
+
+      openNotificationWithIcon("success", "You succesfully updated the user");
     } catch (error) {
       console.log(error);
+
+      openNotificationWithIcon("error", "Something went wrong");
     }
+
+    setIsLoading(false);
   }
 
   async function asyncDeleteUser(id: string) {
@@ -247,20 +245,20 @@ const UsersList = observer(() => {
                 setIsModalOpen(true);
                 setEditMode(true);
 
-                let roles = [];
-
-                record.roles?.forEach((item) =>
-                  roles.push({ value: item, label: item })
+                const available_systems = record.available_systems.map(
+                  (item) => {
+                    return { value: item.id, label: item.name };
+                  }
                 );
 
-                form.setFieldsValue({
+                setInitialValues({
                   id: record.id,
                   login: record.login,
                   password: "",
                   name: record.name,
                   note: "",
-                  roles: roles,
-                  available_systems: record.available_systems,
+                  roles: record.roles,
+                  available_systems: available_systems,
                 });
               }}
             >
@@ -291,6 +289,10 @@ const UsersList = observer(() => {
           style={{ width: "120px" }}
           type="primary"
           onClick={() => {
+            setInitialValues({});
+
+            setKey(key + 1);
+
             setIsModalOpen(true);
             setEditMode(false);
           }}
@@ -300,11 +302,18 @@ const UsersList = observer(() => {
         <Modal
           title={editMode ? "Edit User" : "Create User"}
           open={isModalOpen}
-          onCancel={() => setIsModalOpen(false)}
+          onCancel={() => {
+            setInitialValues({});
+
+            setKey(key + 1);
+
+            setIsModalOpen(false);
+          }}
           footer={null}
         >
           <Form
             key={key}
+            initialValues={initialValues}
             name="basic"
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 18 }}
@@ -366,7 +375,7 @@ const UsersList = observer(() => {
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" loading={isLoading}>
                 {editMode ? "Edit" : "Create"}
               </Button>
             </Form.Item>
