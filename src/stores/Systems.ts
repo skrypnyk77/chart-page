@@ -18,9 +18,25 @@ class SystemsStore {
     this.isLoading = true;
 
     try {
-      const data = await api.getSystems();
+      const systemsData = await api.getSystems();
 
-      this.systemsData = data;
+      const phpData = await Promise.all(
+        systemsData?.map((item, index) => api.getAnotherSystem(index + 1))
+      );
+
+      const mapped = systemsData?.map((item, index) => {
+        return {
+          ...item,
+          battery: phpData[index]?.battery,
+          batterydays: phpData[index]?.batterydays,
+          devices: phpData[index]?.devices,
+          emergency: phpData[index]?.emergency,
+          ps_battery: phpData[index]?.ps_battery,
+          temperature: phpData[index]?.temperature,
+        };
+      });
+
+      this.systemsData = mapped;
     } catch (err) {
       console.warn(err);
     }

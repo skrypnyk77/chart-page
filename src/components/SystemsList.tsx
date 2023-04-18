@@ -29,35 +29,7 @@ const SystemsList = observer(() => {
     systemsStore: { getSystems, systemsData, isLoading },
   } = useStores();
 
-  const [combineData, setCombineData] = useState([]);
-
   useEffect(() => {
-    async function asyncGetHardCodeSystem() {
-      try {
-        const data = await Promise.all(
-          systemsData.map((item, index) =>
-            systemsApi.getAnotherSystem(index + 1)
-          )
-        );
-
-        const mapped = systemsData.map((item, index) => {
-          return {
-            ...item,
-            battery: data[index]?.battery,
-            batterydays: data[index]?.batterydays,
-            devices: data[index]?.devices,
-            emergency: data[index]?.emergency,
-            ps_battery: data[index]?.ps_battery,
-            temperature: data[index]?.temperature,
-          };
-        });
-
-        setCombineData(mapped);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
     async function asyncGetMe() {
       await getMe();
     }
@@ -73,18 +45,15 @@ const SystemsList = observer(() => {
       await getSystems();
     }
 
-    asyncGetHardCodeSystem();
+    asyncGetSystems();
     asyncGetMe();
     asyncGetLamps();
     asyncGetGroups();
-    asyncGetSystems();
   }, []);
 
   const handleOpenSystem = (id: string): void => {
     navigate(`/charts/dashboard/${id}`);
   };
-
-  console.log("combineData", combineData);
 
   return (
     <Layout style={{ padding: 20 }}>
@@ -105,7 +74,7 @@ const SystemsList = observer(() => {
         </div>
       ) : (
         <Row>
-          {combineData?.map((system) => {
+          {systemsData?.map((system) => {
             return (
               <Col style={{ display: "inline-grid" }} key={system.id} span={6}>
                 <Card
