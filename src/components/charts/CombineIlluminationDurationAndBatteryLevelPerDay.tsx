@@ -48,14 +48,11 @@ export const CombineIlluminationDurationAndBatteryLevelPerDay = observer(
 
           setBatteryLevel(batteryLevel);
 
-          const illuminationDuration =
-            system === "4" || system === '20'
-              ? await illuminationApi.getNZIllumination({
-                  ...defaultIlluminationDurationWeekFilters,
-                })
-              : await illuminationApi.getIlluminationDuration({
-                  ...defaultIlluminationDurationWeekFilters,
-                });
+          const illuminationDuration = await illuminationApi.getPhpIllumination(
+            {
+              ...defaultIlluminationDurationWeekFilters,
+            }
+          );
 
           const hoursMapped = illuminationDuration.map((item) => {
             return { date: item.date, hours: item.hours, name: "hours" };
@@ -82,12 +79,15 @@ export const CombineIlluminationDurationAndBatteryLevelPerDay = observer(
           geometry: "column",
           columnWidthRatio: 0.7,
           label: {},
-          color: ["#5B8FF9", "#5D7092"],
+          color: "#1890ff",
         },
         {
           geometry: "line",
-          color: "#29cae4",
+          color: "#ee7600",
           seriesField: "batteryLevel",
+          lineStyle: {
+            lineWidth: 3,
+          },
         },
       ],
       xAxis: {
@@ -115,7 +115,7 @@ export const CombineIlluminationDurationAndBatteryLevelPerDay = observer(
             marker: {
               symbol: "square",
               style: {
-                fill: "#29cae4",
+                fill: "#ee7600",
                 r: 5,
               },
             },
@@ -126,7 +126,7 @@ export const CombineIlluminationDurationAndBatteryLevelPerDay = observer(
             marker: {
               symbol: "square",
               style: {
-                fill: "#586bce",
+                fill: "#1890ff",
                 r: 5,
               },
             },

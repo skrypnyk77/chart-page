@@ -1,9 +1,9 @@
 import { apiClient, statsClient } from "./httpClient";
 
 class illuminationApi {
-  async getNZIllumination(params) {
+  async getPhpIllumination(params) {
     try {
-      const { data } = await statsClient.get("/stats/4/illumination.php", {
+      const { data } = await statsClient.get("/stats/illumination.php", {
         params,
       });
 

@@ -72,9 +72,7 @@ const SingleSystem = observer(() => {
   };
 
   useEffect(() => {
-    if (id === "4" || id === "20") {
-      getAnotherSystemData();
-    }
+    getAnotherSystemData();
 
     getAdditionalInfoAboutSystem();
   }, []);
@@ -94,12 +92,12 @@ const SingleSystem = observer(() => {
         <CombineIlluminationDurationAndBatteryLevelPerHour system={id} />
       ),
     },
-    id !== "4" &&
-      id !== "20" && {
-        key: "3",
-        label: "Illumination Duration",
-        children: <IlluminationDuration system={id} params={params} />,
-      },
+    // id !== "4" &&
+    //   id !== "20" && {
+    //     key: "3",
+    //     label: "Illumination Duration",
+    //     children: <IlluminationDuration system={id} params={params} />,
+    //   },
     {
       key: "4",
       label: "Battery Level",
@@ -118,92 +116,91 @@ const SingleSystem = observer(() => {
         <h1 style={{ fontSize: 40, fontWeight: "bold", marginBottom: 40 }}>
           {systemTitle || ""}
         </h1>
-        {(id === "4" || id === "20") && (
-          <div style={{ marginBottom: 40, display: "flex" }}>
-            <div style={{ marginRight: 30 }}>
-              <FontAwesomeIcon
-                icon={faTowerBroadcast}
-                style={{ marginRight: 10 }}
-              />{" "}
-              Online Devices: {hardCodeSystem?.devices}%
-            </div>
-            {hardCodeSystem?.ps_battery <= 1200 && (
-              <div>
-                <div style={{ marginRight: 30 }}>
-                  <FontAwesomeIcon
-                    icon={faCarBattery}
-                    style={{ marginRight: 10 }}
-                  />{" "}
-                  Backup battery:{"  "}
-                  {hardCodeSystem.ps_battery >= 1025 &&
-                  hardCodeSystem.ps_battery <= 1200
-                    ? "OK"
-                    : "CRITICAL"}
-                </div>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faPlug}
-                    color={"red"}
-                    style={{ marginRight: 14 }}
-                  />{" "}
-                  <span style={{ color: "red" }}>AC Power Fail</span>
-                </div>
-              </div>
-            )}
-            <div style={{ marginRight: 30 }}>
-              <FontAwesomeIcon
-                icon={faBatteryFull}
-                style={{ marginRight: 10 }}
-                color={
-                  hardCodeSystem?.battery < 30
-                    ? "red"
-                    : hardCodeSystem?.battery > 65
-                    ? "green"
-                    : "orange"
-                }
-              />{" "}
-              Avg. Battery Level Devices: {hardCodeSystem?.battery}%
-            </div>
-            <div style={{ marginRight: 30 }}>
-              <FontAwesomeIcon
-                style={{ marginRight: 10 }}
-                icon={faBatteryEmpty}
-                color={
-                  hardCodeSystem?.batterydays < 60
-                    ? "red"
-                    : hardCodeSystem?.batterydays > 180
-                    ? "green"
-                    : "orange"
-                }
-              />{" "}
-              Replace battery in {hardCodeSystem?.batterydays} days
-            </div>
-            <div style={{ marginRight: 30 }}>
-              <FontAwesomeIcon
-                style={{ marginRight: 10 }}
-                icon={faTemperatureHalf}
-                color={
-                  hardCodeSystem?.temperature < 65
-                    ? "red"
-                    : hardCodeSystem?.temperature > 75
-                    ? "green"
-                    : "orange"
-                }
-              />{" "}
-              Avg. Temperature Devices: {hardCodeSystem?.temperature}C
-            </div>
-            {hardCodeSystem?.emergency !== 0 && (
-              <div>
-                {" "}
-                <FontAwesomeIcon
-                  style={{ marginRight: 10 }}
-                  icon={faTriangleExclamation}
-                />{" "}
-                Emergency mode ON
-              </div>
-            )}
+        
+        <div style={{ marginBottom: 40, display: "flex" }}>
+          <div style={{ marginRight: 30 }}>
+            <FontAwesomeIcon
+              icon={faTowerBroadcast}
+              style={{ marginRight: 10 }}
+            />{" "}
+            Online Devices: {hardCodeSystem?.devices}%
           </div>
-        )}
+          {hardCodeSystem?.ps_battery <= 1200 && (
+            <div>
+              <div style={{ marginRight: 30 }}>
+                <FontAwesomeIcon
+                  icon={faCarBattery}
+                  style={{ marginRight: 10 }}
+                />{" "}
+                Backup battery:{"  "}
+                {hardCodeSystem.ps_battery >= 1025 &&
+                hardCodeSystem.ps_battery <= 1200
+                  ? "OK"
+                  : "CRITICAL"}
+              </div>
+              <div>
+                <FontAwesomeIcon
+                  icon={faPlug}
+                  color={"red"}
+                  style={{ marginRight: 14 }}
+                />{" "}
+                <span style={{ color: "red" }}>AC Power Fail</span>
+              </div>
+            </div>
+          )}
+          <div style={{ marginRight: 30 }}>
+            <FontAwesomeIcon
+              icon={faBatteryFull}
+              style={{ marginRight: 10 }}
+              color={
+                hardCodeSystem?.battery < 30
+                  ? "red"
+                  : hardCodeSystem?.battery > 65
+                  ? "green"
+                  : "orange"
+              }
+            />{" "}
+            Avg. Battery Level Devices: {hardCodeSystem?.battery}%
+          </div>
+          <div style={{ marginRight: 30 }}>
+            <FontAwesomeIcon
+              style={{ marginRight: 10 }}
+              icon={faBatteryEmpty}
+              color={
+                hardCodeSystem?.batterydays < 60
+                  ? "red"
+                  : hardCodeSystem?.batterydays > 180
+                  ? "green"
+                  : "orange"
+              }
+            />{" "}
+            Replace battery in {hardCodeSystem?.batterydays} days
+          </div>
+          <div style={{ marginRight: 30 }}>
+            <FontAwesomeIcon
+              style={{ marginRight: 10 }}
+              icon={faTemperatureHalf}
+              color={
+                hardCodeSystem?.temperature < 65
+                  ? "red"
+                  : hardCodeSystem?.temperature > 75
+                  ? "green"
+                  : "orange"
+              }
+            />{" "}
+            Avg. Temperature Devices: {hardCodeSystem?.temperature}C
+          </div>
+          {hardCodeSystem?.emergency !== 0 && (
+            <div>
+              {" "}
+              <FontAwesomeIcon
+                style={{ marginRight: 10 }}
+                icon={faTriangleExclamation}
+              />{" "}
+              Emergency mode ON
+            </div>
+          )}
+        </div>
 
         <Tabs defaultActiveKey="1" items={items} />
       </Layout>
