@@ -33,6 +33,7 @@ class SystemsStore {
           emergency: phpData[index]?.emergency,
           ps_battery: phpData[index]?.ps_battery,
           temperature: phpData[index]?.temperature,
+          last_update: phpData[index]?.last_update,
         };
       });
 

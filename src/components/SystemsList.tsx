@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useStores } from "../use-stores";
 import { observer } from "mobx-react";
 import { useNavigate } from "react-router-dom";
-import systemsApi from "../data/systemsApi";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -18,6 +17,8 @@ import {
 import { Card, Layout, Typography, Row, Col, Spin } from "antd";
 
 const { Title } = Typography;
+
+const UPDATED_FORMAT = ''
 
 const SystemsList = observer(() => {
   const navigate = useNavigate();
@@ -75,6 +76,8 @@ const SystemsList = observer(() => {
       ) : (
         <Row>
           {systemsData?.map((system) => {
+            console.log(system);
+
             return (
               <Col style={{ display: "inline-grid" }} key={system.id} span={6}>
                 <Card
@@ -171,6 +174,9 @@ const SystemsList = observer(() => {
                         />{" "}
                         Emergency mode ON
                       </div>
+                    )}
+                    {system?.last_update && (
+                      <div style={{ marginTop: 16 }}>Updated: {system?.last_update}</div>
                     )}
                   </div>
                 </Card>

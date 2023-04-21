@@ -113,12 +113,15 @@ const SingleSystem = observer(() => {
   return (
     !isLoading && (
       <Layout style={{ padding: 20 }}>
-        <h1 style={{ fontSize: 40, fontWeight: "bold", marginBottom: 40 }}>
-          {systemTitle || ""}
-        </h1>
-        
+        <div style={{ marginBottom: 40 }}>
+          <h1 style={{ fontSize: 40, fontWeight: "bold" }}>
+            {systemTitle || ""}
+          </h1>
+          <div>Updated (loc. time): {hardCodeSystem?.last_update}</div>
+        </div>
+
         <div style={{ marginBottom: 40, display: "flex" }}>
-          <div style={{ marginRight: 30 }}>
+          <div style={{ marginRight: 40 }}>
             <FontAwesomeIcon
               icon={faTowerBroadcast}
               style={{ marginRight: 10 }}
@@ -148,7 +151,7 @@ const SingleSystem = observer(() => {
               </div>
             </div>
           )}
-          <div style={{ marginRight: 30 }}>
+          <div style={{ marginRight: 40 }}>
             <FontAwesomeIcon
               icon={faBatteryFull}
               style={{ marginRight: 10 }}
@@ -162,7 +165,7 @@ const SingleSystem = observer(() => {
             />{" "}
             Avg. Battery Level Devices: {hardCodeSystem?.battery}%
           </div>
-          <div style={{ marginRight: 30 }}>
+          <div style={{ marginRight: 40 }}>
             <FontAwesomeIcon
               style={{ marginRight: 10 }}
               icon={faBatteryEmpty}
@@ -176,7 +179,7 @@ const SingleSystem = observer(() => {
             />{" "}
             Replace battery in {hardCodeSystem?.batterydays} days
           </div>
-          <div style={{ marginRight: 30 }}>
+          <div style={{ marginRight: 40 }}>
             <FontAwesomeIcon
               style={{ marginRight: 10 }}
               icon={faTemperatureHalf}
