@@ -18,7 +18,7 @@ import { Card, Layout, Typography, Row, Col, Spin } from "antd";
 
 const { Title } = Typography;
 
-const UPDATED_FORMAT = ''
+// const UPDATED_FORMAT = ''
 
 const SystemsList = observer(() => {
   const navigate = useNavigate();
