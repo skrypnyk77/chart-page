@@ -7,20 +7,20 @@ import { Typography, Spin } from "antd";
 
 const { Title } = Typography;
 
-export const Temperature = observer(({ params }) => {
+export const OnlineDevices = observer(({ params }) => {
   const [temperatureLoading, setTemperatureLoading] = useState(false);
 
-  const [temperature, setTemperature] = useState([]);
+  const [onlineDevices, setOnlineDevices] = useState([]);
 
-  const asyncGetTemperature = async (): Promise<void> => {
+  const asyncGetOnlineDevices = async (): Promise<void> => {
     setTemperatureLoading(true);
 
     try {
-      const data = await temperatureApi.getPhpTemperature({
+      const data = await temperatureApi.getPhpOnlineDevices({
         ...params,
       });
 
-      setTemperature(data);
+      setOnlineDevices(data);
     } catch (err) {
       console.log(err);
     }
@@ -29,13 +29,13 @@ export const Temperature = observer(({ params }) => {
   };
 
   useEffect(() => {
-    asyncGetTemperature();
+    asyncGetOnlineDevices();
   }, []);
 
   const config = {
-    data: temperature,
+    data: onlineDevices,
     xField: "date",
-    yField: "temperature",
+    yField: "value",
     columnWidthRatio: 0.8,
     xAxis: {
       label: {
@@ -47,7 +47,7 @@ export const Temperature = observer(({ params }) => {
 
   return (
     <>
-      <Title style={{ marginBottom: "24px" }}>Temperature</Title>
+      <Title style={{ marginBottom: "24px" }}>Online Devices</Title>
 
       {temperatureLoading ? (
         <Spin tip="Loading...">

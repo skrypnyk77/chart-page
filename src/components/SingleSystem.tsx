@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { useParams } from "react-router-dom";
 import systemsApi from "../data/systemsApi";
-import { useStores } from "../use-stores";
 
 import { CombineIlluminationDurationAndBatteryLevelPerDay } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerDay";
 import { CombineIlluminationDurationAndBatteryLevelPerHour } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerHour";
 import { Temperature } from "./charts/Temperature";
+import { OnlineDevices } from "./charts/OnlineDevices";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -61,44 +61,54 @@ const SingleSystem = observer(() => {
     getAdditionalInfoAboutSystem();
   }, []);
 
-  const temperaturePerDayParams = {
+  const customPerDayParams = {
     detalization: "1d",
     ["date[start]"]: moment().add(-1, "month").format(dateTimeFormat),
     ["date[end]"]: moment(new Date()).format(dateTimeFormat),
     system: id,
   };
 
-  const temperaturePerHourParams = {
+  const customPerHourParams = {
     detalization: "1h",
     ["date[start]"]: moment().add(-1, "week").format(dateTimeFormat),
     ["date[end]"]: moment(new Date()).format(dateTimeFormat),
     system: id,
-  }
+  };
 
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: "Battery Level vs Operation Time (Per Day)",
+      label: "Battery vs Illum. (d)",
       children: (
         <CombineIlluminationDurationAndBatteryLevelPerDay system={id} />
       ),
     },
     {
       key: "2",
-      label: "Battery Level vs Operation Time (Weekly Per Hour)",
+      label: "Battery vs Illum. (h)",
       children: (
         <CombineIlluminationDurationAndBatteryLevelPerHour system={id} />
       ),
     },
     {
       key: "3",
-      label: "Temperature (Per Day)",
-      children: <Temperature system={id} params={temperaturePerDayParams} />,
+      label: "Temperature (d)",
+      children: <Temperature params={customPerDayParams} />,
     },
     {
       key: "4",
-      label: "Temperature (Weekly Per Hour)",
-      children: <Temperature system={id} params={temperaturePerHourParams} />,
+      label: "Temperature (h)",
+      children: <Temperature params={customPerHourParams} />,
+    },
+    {
+      key: "5",
+      label: "Online (d)",
+      children: <OnlineDevices params={customPerDayParams} />,
+    },
+    {
+      key: "6",
+      label: "Online (h)",
+      children: <OnlineDevices params={customPerHourParams} />,
     },
   ];
 
