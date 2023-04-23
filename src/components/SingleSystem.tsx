@@ -6,9 +6,7 @@ import { useStores } from "../use-stores";
 
 import { CombineIlluminationDurationAndBatteryLevelPerDay } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerDay";
 import { CombineIlluminationDurationAndBatteryLevelPerHour } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerHour";
-import { IlluminationDuration } from "../components/charts/IlluminationDuration";
-import { BatteryLevel } from "../components/charts/BatteryLevel";
-import { Temperature } from "../components/charts/Temperature";
+import { Temperature } from "./charts/Temperature";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -24,12 +22,15 @@ import {
 import { Layout, Tabs } from "antd";
 import type { TabsProps } from "antd";
 
+import moment from "moment";
+
+const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
+
 const SingleSystem = observer(() => {
   let { id } = useParams();
 
   const [isLoading, setIsLoading] = useState(true);
   const [systemTitle, setSystemTitle] = useState("");
-  const [params, setParams] = useState({});
   const [hardCodeSystem, setHardCodeSystem] = useState({});
 
   const getAdditionalInfoAboutSystem = async (): Promise<void> => {
@@ -37,23 +38,6 @@ const SingleSystem = observer(() => {
       const systemData = await systemsApi.getSystemById(Number(id));
 
       setSystemTitle(systemData.name);
-
-      let lampIds = [];
-      let groupIds = [];
-
-      if (systemData.lamps) {
-        systemData.lamps.forEach((item: any) => {
-          lampIds.push(item.id);
-        });
-      }
-
-      if (systemData.groups_info) {
-        systemData.groups_info.forEach((item: any) => {
-          groupIds.push(item.group.id);
-        });
-      }
-
-      setParams({ lamp: lampIds, group: groupIds });
     } catch (error) {
       console.log(error);
     }
@@ -77,6 +61,20 @@ const SingleSystem = observer(() => {
     getAdditionalInfoAboutSystem();
   }, []);
 
+  const temperaturePerDayParams = {
+    detalization: "1d",
+    ["date[start]"]: moment().add(-1, "month").format(dateTimeFormat),
+    ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+    system: id,
+  };
+
+  const temperaturePerHourParams = {
+    detalization: "1h",
+    ["date[start]"]: moment().add(-1, "week").format(dateTimeFormat),
+    ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+    system: id,
+  }
+
   const items: TabsProps["items"] = [
     {
       key: "1",
@@ -92,21 +90,15 @@ const SingleSystem = observer(() => {
         <CombineIlluminationDurationAndBatteryLevelPerHour system={id} />
       ),
     },
-    // id !== "4" &&
-    //   id !== "20" && {
-    //     key: "3",
-    //     label: "Illumination Duration",
-    //     children: <IlluminationDuration system={id} params={params} />,
-    //   },
     {
-      key: "4",
-      label: "Battery Level",
-      children: <BatteryLevel system={id} params={params} />,
+      key: "3",
+      label: "Temperature (Per Day)",
+      children: <Temperature system={id} params={temperaturePerDayParams} />,
     },
     {
-      key: "5",
-      label: "Temperature",
-      children: <Temperature system={id} params={params} />,
+      key: "4",
+      label: "Temperature (Weekly Per Hour)",
+      children: <Temperature system={id} params={temperaturePerHourParams} />,
     },
   ];
 

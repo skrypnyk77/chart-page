@@ -28,45 +28,36 @@ export const Temperature = observer(({ system, params }) => {
     lampsStore: { lampsData },
   } = useStores();
 
-  const groupsDataOptions = groupsData?.map((item: any) => {
-    return {
-      value: item.id,
-      label: item.code,
-      ...item,
-    };
-  });
+  // const groupsDataOptions = groupsData?.map((item: any) => {
+  //   return {
+  //     value: item.id,
+  //     label: item.code,
+  //     ...item,
+  //   };
+  // });
 
-  const lampsDataOptions = lampsData?.map((item: any) => {
-    return {
-      value: item.id,
-      label: item.name,
-      ...item,
-    };
-  });
-
-  const defaultFilters = {
-    detalization: "1d",
-    ["date[start]"]: moment().add(-1, "month").format(dateTimeFormat),
-    ["date[end]"]: moment(new Date()).format(dateTimeFormat),
-    system: system,
-    lamp: params.lamp,
-    group: params.group,
-  };
+  // const lampsDataOptions = lampsData?.map((item: any) => {
+  //   return {
+  //     value: item.id,
+  //     label: item.name,
+  //     ...item,
+  //   };
+  // });
 
   const [temperatureLoading, setTemperatureLoading] = useState(false);
 
   const [temperature, setTemperature] = useState([]);
-  const [filters, setFilters] = useState({});
+  // const [filters, setFilters] = useState({});
 
   const asyncGetTemperature = async (): Promise<void> => {
     setTemperatureLoading(true);
 
     try {
-      const data = await temperatureApi.getTemperature({
-        ...defaultFilters,
+      const data = await temperatureApi.getPhpTemperature({
+        ...params,
       });
 
-      setFilters({ ...defaultFilters });
+      // setFilters({ ...params });
       setTemperature(data);
     } catch (err) {
       console.log(err);
@@ -92,105 +83,105 @@ export const Temperature = observer(({ system, params }) => {
     },
   };
 
-  // groups filter
-  const handleChangeGroups = (value: string[]): void => {
-    setFilters({
-      ...filters,
-      group: value && value.length > 0 ? value : undefined,
-    });
-  };
+  // // groups filter
+  // const handleChangeGroups = (value: string[]): void => {
+  //   setFilters({
+  //     ...filters,
+  //     group: value && value.length > 0 ? value : undefined,
+  //   });
+  // };
 
-  // lamps filter
-  const handleChangeLamps = (value: string[]): void => {
-    setFilters({
-      ...filters,
-      lamp: value && value.length > 0 ? value : undefined,
-    });
-  };
+  // // lamps filter
+  // const handleChangeLamps = (value: string[]): void => {
+  //   setFilters({
+  //     ...filters,
+  //     lamp: value && value.length > 0 ? value : undefined,
+  //   });
+  // };
 
-  // detalization filter
-  const onDetalizationChange = (event: RadioChangeEvent): void => {
-    setFilters({
-      ...filters,
-      detalization: event.target.value,
-    });
-  };
+  // // detalization filter
+  // const onDetalizationChange = (event: RadioChangeEvent): void => {
+  //   setFilters({
+  //     ...filters,
+  //     detalization: event.target.value,
+  //   });
+  // };
 
-  //date[from/to] filter
-  const onDateFromChange = (
-    value: [Moment, Moment],
-    dateString: [string, string]
-  ): void => {
-    if (value === null) {
-      setFilters({
-        ...filters,
-        ["date[start]"]: defaultFilters["date[start]"],
-        ["date[end]"]: defaultFilters["date[end]"],
-      });
-    } else {
-      setFilters({
-        ...filters,
-        ["date[start]"]: dateString[0],
-        ["date[end]"]: dateString[1],
-      });
-    }
-  };
+  // //date[from/to] filter
+  // const onDateFromChange = (
+  //   value: [Moment, Moment],
+  //   dateString: [string, string]
+  // ): void => {
+  //   if (value === null) {
+  //     setFilters({
+  //       ...filters,
+  //       ["date[start]"]: defaultFilters["date[start]"],
+  //       ["date[end]"]: defaultFilters["date[end]"],
+  //     });
+  //   } else {
+  //     setFilters({
+  //       ...filters,
+  //       ["date[start]"]: dateString[0],
+  //       ["date[end]"]: dateString[1],
+  //     });
+  //   }
+  // };
 
-  const onQuickPresetChange = (preset: string) => {
-    if (preset === "day") {
-      setFilters({
-        ...filters,
-        ["date[start]"]: moment().add(-1, "day").format(dateTimeFormat),
-        ["date[end]"]: moment(new Date()).format(dateTimeFormat),
-      });
-    } else if (preset === "week") {
-      setFilters({
-        ...filters,
-        ["date[start]"]: moment().add(-7, "day").format(dateTimeFormat),
-        ["date[end]"]: moment(new Date()).format(dateTimeFormat),
-      });
-    } else if (preset === "month") {
-      setFilters({
-        ...filters,
-        ["date[start]"]: moment().add(-1, "month").format(dateTimeFormat),
-        ["date[end]"]: moment(new Date()).format(dateTimeFormat),
-      });
-    } else if (preset === "quarter") {
-      setFilters({
-        ...filters,
-        ["date[start]"]: moment().add(-3, "month").format(dateTimeFormat),
-        ["date[end]"]: moment(new Date()).format(dateTimeFormat),
-      });
-    }
-  };
+  // const onQuickPresetChange = (preset: string) => {
+  //   if (preset === "day") {
+  //     setFilters({
+  //       ...filters,
+  //       ["date[start]"]: moment().add(-1, "day").format(dateTimeFormat),
+  //       ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+  //     });
+  //   } else if (preset === "week") {
+  //     setFilters({
+  //       ...filters,
+  //       ["date[start]"]: moment().add(-7, "day").format(dateTimeFormat),
+  //       ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+  //     });
+  //   } else if (preset === "month") {
+  //     setFilters({
+  //       ...filters,
+  //       ["date[start]"]: moment().add(-1, "month").format(dateTimeFormat),
+  //       ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+  //     });
+  //   } else if (preset === "quarter") {
+  //     setFilters({
+  //       ...filters,
+  //       ["date[start]"]: moment().add(-3, "month").format(dateTimeFormat),
+  //       ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+  //     });
+  //   }
+  // };
 
-  //submit filters
-  const submitFilters = async (): Promise<void> => {
-    setTemperatureLoading(true);
+  // //submit filters
+  // const submitFilters = async (): Promise<void> => {
+  //   setTemperatureLoading(true);
 
-    try {
-      const data = await temperatureApi.getTemperature({
-        ...filters,
-      });
+  //   try {
+  //     const data = await temperatureApi.getTemperature({
+  //       ...filters,
+  //     });
 
-      setTemperature(data);
-    } catch (error) {
-      console.log(error);
-    }
+  //     setTemperature(data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
 
-    setTemperatureLoading(false);
-  };
+  //   setTemperatureLoading(false);
+  // };
 
-  //reset filters
-  const resetFilters = async (): Promise<void> => {
-    await asyncGetTemperature();
-  };
+  // //reset filters
+  // const resetFilters = async (): Promise<void> => {
+  //   await asyncGetTemperature();
+  // };
 
   return (
     <>
       <Title style={{ marginBottom: "24px" }}>Temperature</Title>
 
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      {/* <div style={{ display: "flex", flexDirection: "column" }}>
         <Space style={{ marginBottom: "16px" }}>
           <Text style={{ width: "100px", display: "block" }}>Detalization</Text>
           <Radio.Group
@@ -315,7 +306,7 @@ export const Temperature = observer(({ system, params }) => {
         </Space>
       </div>
 
-      <br />
+      <br /> */}
 
       {temperatureLoading ? (
         <Spin tip="Loading...">

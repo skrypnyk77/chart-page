@@ -42,7 +42,7 @@ export const CombineIlluminationDurationAndBatteryLevelPerHour = observer(
         setCombineDurationAndBatteryLoading(true);
 
         try {
-          const batteryLevel = await batteryApi.getBatteryLevel({
+          const batteryLevel = await batteryApi.getPhpBatteryLevel({
             ...defaultBatteryLevelWeekFilters,
           });
 
