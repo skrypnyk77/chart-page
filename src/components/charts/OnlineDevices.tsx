@@ -48,6 +48,19 @@ export const OnlineDevices = observer(({ params }) => {
     xAxis: {
       fontSize: 20,
       label: {
+        formatter: (text: string, item: any, index: number) => {
+          if (params.detalization === "1d") {
+            return text;
+          } else {
+            const el = item.name.split(" ");
+
+            if (el[1] === "00:00") {
+              return el[0] + " " + el[1];
+            } else {
+              return el[1];
+            }
+          }
+        },
         style: {
           fontSize: params.detalization === '1d' ? 12 : 8,
           textAlign: "right",
