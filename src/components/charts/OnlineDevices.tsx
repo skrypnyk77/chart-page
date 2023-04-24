@@ -37,7 +37,7 @@ export const OnlineDevices = observer(({ params }) => {
     xField: "date",
     yField: "value",
     columnWidthRatio: 0.8,
-    label: {
+    label: params.detalization === '1d' && {
       position: 'top',
       style: {
         fill: '#000000',

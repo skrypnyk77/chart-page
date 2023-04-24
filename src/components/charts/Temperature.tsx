@@ -37,14 +37,13 @@ export const Temperature = observer(({ params }) => {
     xField: "date",
     yField: "temperature",
     columnWidthRatio: 0.8,
-    label: {
+    label: params.detalization === '1d' && {
       style: {
         fill: '#000000',
         opacity: 0.6,
         fontSize: 12,
       },
-      position: 'top',
-      offset: 10,
+      position: 'top'
     },
     xAxis: {
       fontSize: 20,
