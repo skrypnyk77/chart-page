@@ -7,6 +7,7 @@ import { CombineIlluminationDurationAndBatteryLevelPerDay } from "../components/
 import { CombineIlluminationDurationAndBatteryLevelPerHour } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerHour";
 import { Temperature } from "./charts/Temperature";
 import { OnlineDevices } from "./charts/OnlineDevices";
+import { Test } from "../components/charts/Test";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -109,6 +110,16 @@ const SingleSystem = observer(() => {
       key: "6",
       label: "Online (h)",
       children: <OnlineDevices params={customPerHourParams} />,
+    },
+    {
+      key: "7",
+      label: "Battery vs Illum. multiple (d)",
+      children: <Test params={customPerDayParams} />,
+    },
+    {
+      key: "8",
+      label: "Battery vs Illum. multiple (h)",
+      children: <Test params={customPerHourParams} />,
     },
   ];
 

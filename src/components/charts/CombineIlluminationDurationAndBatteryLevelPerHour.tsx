@@ -135,34 +135,6 @@ export const CombineIlluminationDurationAndBatteryLevelPerHour = observer(
           },
         },
       },
-      legend: {
-        custom: true,
-        position: "bottom",
-        items: [
-          {
-            value: "batteryLevel",
-            name: "Average Battery Level (%)",
-            marker: {
-              symbol: "square",
-              style: {
-                fill: "#ee7600",
-                r: 5,
-              },
-            },
-          },
-          {
-            value: "minutes",
-            name: "Light Operations (minutes)",
-            marker: {
-              symbol: "square",
-              style: {
-                fill: "#1890ff",
-                r: 5,
-              },
-            },
-          },
-        ],
-      },
     };
 
     return (

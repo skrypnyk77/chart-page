@@ -1,6 +1,18 @@
 import { apiClient, statsClient } from "./httpClient";
 
 class illuminationApi {
+  async getPhpIlluminationGroup(params) {
+    try {
+      const { data } = await statsClient.get("/stats/illumination-group.php", {
+        params,
+      });
+
+      return data;
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
   async getPhpIllumination(params) {
     try {
       const { data } = await statsClient.get("/stats/illumination.php", {

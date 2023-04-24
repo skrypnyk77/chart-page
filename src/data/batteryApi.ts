@@ -1,6 +1,18 @@
 import { apiClient, statsClient } from "./httpClient";
 
 class batteryApi {
+  async getPhpBatteryLevelGroup(params) {
+    try {
+      const { data } = await statsClient.get("/stats/battery-level-group.php", {
+        params,
+      });
+
+      return data;
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
   async getPhpBatteryLevel(params) {
     try {
       const { data } = await statsClient.get("/stats/battery-level.php", {
