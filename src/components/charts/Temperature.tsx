@@ -37,11 +37,29 @@ export const Temperature = observer(({ params }) => {
     xField: "date",
     yField: "temperature",
     columnWidthRatio: 0.8,
-    xAxis: {
-      label: {
-        autoHide: true,
-        autoRotate: false,
+    label: {
+      style: {
+        fill: '#000000',
+        opacity: 0.6,
+        fontSize: 12,
       },
+      position: 'top',
+      offset: 10,
+    },
+    xAxis: {
+      fontSize: 20,
+      label: {
+        style: {
+          fontSize: params.detalization === '1d' ? 12 : 8,
+          textAlign: "right",
+          textBaseline: "middle",
+        },
+        rotate: 11,
+        autoRotate: true,
+        autoHide: false,
+        autoEllipsis: false,
+      },
+      tickCount: temperature.length
     },
   };
 

@@ -21,7 +21,7 @@ class SystemsStore {
       const systemsData = await api.getSystems();
 
       const phpData = await Promise.all(
-        systemsData?.map((item, index) => api.getAnotherSystem(index + 1))
+        systemsData?.map((item) => api.getAnotherSystem(item.id))
       );
 
       const mapped = systemsData?.map((item, index) => {
