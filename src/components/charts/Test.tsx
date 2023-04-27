@@ -14,6 +14,7 @@ import type { DatePickerProps } from "antd";
 const { Title } = Typography;
 
 const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
+const dateFormat = "YYYY-MM-DD";
 
 export const Test = observer(({ params }) => {
   const [
@@ -121,10 +122,29 @@ export const Test = observer(({ params }) => {
   const onChange: DatePickerProps["onChange"] = async (date) => {
     if (date) {
       params["date[end]"] = moment(date).format(dateTimeFormat);
+
+      const selectedDate = moment(params["date[end]"])
+        .utcOffset(2)
+        .format(dateFormat);
+      const nowDate = moment(new Date()).utcOffset(2).format(dateFormat);
+
+      const isSameOrAfter = moment(selectedDate).isSameOrAfter(nowDate, "day");
+
+      if (!isSameOrAfter) {
+        params["date[end]"] = moment(params["date[end]"])
+          .endOf("day")
+          .format(dateTimeFormat);
+      }
     } else {
       params["date[end]"] = moment(new Date())
         .utcOffset(2)
         .format(dateTimeFormat);
+    }
+
+    if (params.detalization === "1d") {
+      params["date[start]"] = moment().add(-1, "month").format(dateTimeFormat);
+    } else {
+      params["date[start]"] = moment().add(-1, "week").format(dateTimeFormat);
     }
 
     await asyncGetCombineIlluminationDurationAndBetteryLevel();
@@ -137,7 +157,10 @@ export const Test = observer(({ params }) => {
           ? "Battery Level vs Operation Time (Per Day)"
           : "Battery Level vs Operation Time (Weekly Per Hour)"}
       </Title>
-      <DatePicker onChange={onChange} placeholder="Date End" />
+      <DatePicker
+        onChange={onChange}
+        defaultValue={moment(new Date(), dateTimeFormat).utcOffset(2)}
+      />
       <br />
       <br />
 
