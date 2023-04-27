@@ -142,9 +142,13 @@ export const Test = observer(({ params }) => {
     }
 
     if (params.detalization === "1d") {
-      params["date[start]"] = moment().add(-1, "month").format(dateTimeFormat);
+      params["date[start]"] = moment(params["date[end]"])
+        .add(-1, "month")
+        .format(dateTimeFormat);
     } else {
-      params["date[start]"] = moment().add(-1, "week").format(dateTimeFormat);
+      params["date[start]"] = moment(params["date[end]"])
+        .add(-1, "week")
+        .format(dateTimeFormat);
     }
 
     await asyncGetCombineIlluminationDurationAndBetteryLevel();
