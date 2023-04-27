@@ -65,14 +65,14 @@ const SingleSystem = observer(() => {
   const customPerDayParams = {
     detalization: "1d",
     ["date[start]"]: moment().add(-1, "month").format(dateTimeFormat),
-    ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+    ["date[end]"]: moment(new Date()).utcOffset(2).format(dateTimeFormat),
     system: id,
   };
 
   const customPerHourParams = {
     detalization: "1h",
     ["date[start]"]: moment().add(-1, "week").format(dateTimeFormat),
-    ["date[end]"]: moment(new Date()).format(dateTimeFormat),
+    ["date[end]"]: moment(new Date()).utcOffset(2).format(dateTimeFormat),
     system: id,
   };
 

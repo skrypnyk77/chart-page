@@ -4,10 +4,12 @@ import { observer } from "mobx-react";
 import batteryApi from "../../data/batteryApi";
 import illuminationApi from "../../data/illuminationApi";
 
-import { Typography, Spin } from "antd";
+import { Typography, Spin, DatePicker } from "antd";
 import moment from "moment";
 
 import { DualAxes } from "@ant-design/plots";
+
+import type { DatePickerProps } from "antd";
 
 const { Title } = Typography;
 
@@ -116,10 +118,29 @@ export const Test = observer(({ params }) => {
     },
   };
 
+  const onChange: DatePickerProps["onChange"] = async (date) => {
+    if (date) {
+      params["date[end]"] = moment(date).format(dateTimeFormat);
+    } else {
+      params["date[end]"] = moment(new Date())
+        .utcOffset(2)
+        .format(dateTimeFormat);
+    }
+
+    await asyncGetCombineIlluminationDurationAndBetteryLevel();
+  };
+
   return (
     <>
-      <Title style={{ marginBottom: "24px" }}>{params.detalization === '1d' ? 'Battery Level vs Operation Time (Per Day)' : 'Battery Level vs Operation Time (Weekly Per Hour)' }</Title>
+      <Title style={{ marginBottom: "24px" }}>
+        {params.detalization === "1d"
+          ? "Battery Level vs Operation Time (Per Day)"
+          : "Battery Level vs Operation Time (Weekly Per Hour)"}
+      </Title>
+      <DatePicker onChange={onChange} placeholder="Date End" />
       <br />
+      <br />
+
       {combineDurationAndBatteryLoading ? (
         <Spin tip="Loading...">
           <DualAxes {...config} />
