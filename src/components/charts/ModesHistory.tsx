@@ -5,7 +5,7 @@ export const ModesHistory = observer(({ system }) => {
     <iframe
       src={`http://monitoring.s4ga.tech/stats/modes.php?system=${system}`}
       width="100%"
-      height="400px"
+      height="500px"
       frameBorder="0"
     ></iframe>
   );
