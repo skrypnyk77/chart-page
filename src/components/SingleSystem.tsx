@@ -8,6 +8,7 @@ import { CombineIlluminationDurationAndBatteryLevelPerHour } from "../components
 import { Temperature } from "./charts/Temperature";
 import { OnlineDevices } from "./charts/OnlineDevices";
 import { Test } from "../components/charts/Test";
+import { ModesHistory } from "../components/charts/ModesHistory"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -24,6 +25,8 @@ import { Layout, Tabs } from "antd";
 import type { TabsProps } from "antd";
 
 import moment from "moment";
+
+import "./index.css";
 
 const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 
@@ -120,6 +123,11 @@ const SingleSystem = observer(() => {
       key: "8",
       label: "Battery vs Illum. multiple (h)",
       children: <Test params={customPerHourParams} />,
+    },
+    {
+      key: "9",
+      label: "Modes history",
+      children: <ModesHistory system={id} />,
     },
   ];
 

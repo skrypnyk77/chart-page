@@ -96,6 +96,11 @@ export const Test = observer(({ params }) => {
       },
       tickCount: illuminationDuration.length,
     },
+    meta: {
+      battery: {
+        min: 0,
+      },
+    },
     yAxis: {
       duration: {
         title: {
