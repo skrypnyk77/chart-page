@@ -6,6 +6,7 @@ export const ModesHistory = observer(({ system }) => {
       src={`http://monitoring.s4ga.tech/stats/modes.php?system=${system}`}
       width="100%"
       height="400px"
+      frameBorder="0"
     ></iframe>
   );
 });
