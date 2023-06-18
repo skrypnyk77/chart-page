@@ -108,6 +108,7 @@ export const CombineIlluminationDurationAndBatteryLevelPerHour = observer(
       meta: {
         batteryLevel: {
           min: 0,
+          max: 100,
         },
       },
       yAxis: {

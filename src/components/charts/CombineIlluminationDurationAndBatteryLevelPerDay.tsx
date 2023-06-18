@@ -111,6 +111,12 @@ export const CombineIlluminationDurationAndBatteryLevelPerDay = observer(
           },
         },
       },
+      meta: {
+        batteryLevel: {
+          min: 0,
+          max: 100,
+        },
+      },
       legend: {
         custom: true,
         position: "bottom",

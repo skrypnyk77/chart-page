@@ -99,6 +99,7 @@ export const Test = observer(({ params }) => {
     meta: {
       battery: {
         min: 0,
+        max: 100,
       },
     },
     yAxis: {
