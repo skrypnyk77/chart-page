@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { useParams } from "react-router-dom";
 import systemsApi from "../data/systemsApi";
+import { useStores } from "../use-stores";
 
 import { CombineIlluminationDurationAndBatteryLevelPerDay } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerDay";
 import { CombineIlluminationDurationAndBatteryLevelPerHour } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerHour";
@@ -32,6 +33,9 @@ const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 
 const SingleSystem = observer(() => {
   let { id } = useParams();
+  const {
+    userStore: { isAdmin },
+  } = useStores();
 
   const [isLoading, setIsLoading] = useState(true);
   const [systemTitle, setSystemTitle] = useState("");
@@ -164,24 +168,36 @@ const SingleSystem = observer(() => {
     !isLoading && (
       <Layout style={{ padding: 20 }}>
         <div style={{ marginBottom: 30 }}>
-          {showTitleInput ? (
+          {showTitleInput && isAdmin ? (
             <Space.Compact
               size="large"
-              style={{ width: 600, marginBottom: 40 }}
+              style={{ width: 600, marginBottom: 40, display: 'flex', flexDirection: 'column' }}
             >
-              <Input
-                style={{ width: 400 }}
-                value={systemTitle || ""}
-                onChange={handleChangeSystemTitle}
-              />
-              <Button onClick={updateSystemTitle} type="primary">
-                Update
-              </Button>
+              <Space>
+                <Input
+                  status={systemTitle ? "" : "error"}
+                  style={{ width: 400 }}
+                  value={systemTitle || ""}
+                  onChange={handleChangeSystemTitle}
+                />
+                <Button
+                  disabled={!systemTitle}
+                  onClick={updateSystemTitle}
+                  type="primary"
+                >
+                  Update
+                </Button>
+              </Space>
+              {!systemTitle && (
+                <div style={{ color: "#ff4d4f" }}>
+                  System name must not be empty
+                </div>
+              )}
             </Space.Compact>
           ) : (
             <h1
               onClick={() => setShowTitleInput(true)}
-              style={{ fontSize: 40, fontWeight: "bold", cursor: "pointer" }}
+              style={{ fontSize: 40, fontWeight: "bold", cursor: isAdmin ? "pointer" : 'text' }}
             >
               {systemTitle || ""}
             </h1>
