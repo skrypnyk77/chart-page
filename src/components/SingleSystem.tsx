@@ -8,7 +8,7 @@ import { CombineIlluminationDurationAndBatteryLevelPerHour } from "../components
 import { Temperature } from "./charts/Temperature";
 import { OnlineDevices } from "./charts/OnlineDevices";
 import { Test } from "../components/charts/Test";
-import { ModesHistory } from "../components/charts/ModesHistory"
+import { ModesHistory } from "../components/charts/ModesHistory";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -21,7 +21,7 @@ import {
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { Layout, Tabs } from "antd";
+import { Button, Layout, Tabs, Input, Space } from "antd";
 import type { TabsProps } from "antd";
 
 import moment from "moment";
@@ -35,6 +35,7 @@ const SingleSystem = observer(() => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [systemTitle, setSystemTitle] = useState("");
+  const [showTitleInput, setShowTitleInput] = useState(false);
   const [hardCodeSystem, setHardCodeSystem] = useState({});
 
   const getAdditionalInfoAboutSystem = async (): Promise<void> => {
@@ -67,14 +68,20 @@ const SingleSystem = observer(() => {
 
   const customPerDayParams = {
     detalization: "1d",
-    ["date[start]"]: moment().utcOffset(2).add(-1, "month").format(dateTimeFormat),
+    ["date[start]"]: moment()
+      .utcOffset(2)
+      .add(-1, "month")
+      .format(dateTimeFormat),
     ["date[end]"]: moment(new Date()).utcOffset(2).format(dateTimeFormat),
     system: id,
   };
 
   const customPerHourParams = {
     detalization: "1h",
-    ["date[start]"]: moment().utcOffset(2).add(-1, "week").format(dateTimeFormat),
+    ["date[start]"]: moment()
+      .utcOffset(2)
+      .add(-1, "week")
+      .format(dateTimeFormat),
     ["date[end]"]: moment(new Date()).utcOffset(2).format(dateTimeFormat),
     system: id,
   };
@@ -84,14 +91,18 @@ const SingleSystem = observer(() => {
       key: "1",
       label: "Battery vs Illum. (d)",
       children: (
-        <CombineIlluminationDurationAndBatteryLevelPerDay params={customPerDayParams} />
+        <CombineIlluminationDurationAndBatteryLevelPerDay
+          params={customPerDayParams}
+        />
       ),
     },
     {
       key: "2",
       label: "Battery vs Illum. (h)",
       children: (
-        <CombineIlluminationDurationAndBatteryLevelPerHour params={customPerHourParams} />
+        <CombineIlluminationDurationAndBatteryLevelPerHour
+          params={customPerHourParams}
+        />
       ),
     },
     {
@@ -131,13 +142,50 @@ const SingleSystem = observer(() => {
     },
   ];
 
+  const handleChangeSystemTitle = (e) => {
+    setSystemTitle(e.target.value);
+  };
+
+  const updateSystemTitle = async (): Promise<void> => {
+    try {
+      await systemsApi.updateSystem({ system: id, name: systemTitle });
+
+      setShowTitleInput(false);
+
+      getAnotherSystemData();
+
+      getAdditionalInfoAboutSystem();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     !isLoading && (
       <Layout style={{ padding: 20 }}>
-        <div style={{ marginBottom: 40 }}>
-          <h1 style={{ fontSize: 40, fontWeight: "bold" }}>
-            {systemTitle || ""}
-          </h1>
+        <div style={{ marginBottom: 30 }}>
+          {showTitleInput ? (
+            <Space.Compact
+              size="large"
+              style={{ width: 600, marginBottom: 40 }}
+            >
+              <Input
+                style={{ width: 400 }}
+                value={systemTitle || ""}
+                onChange={handleChangeSystemTitle}
+              />
+              <Button onClick={updateSystemTitle} type="primary">
+                Update
+              </Button>
+            </Space.Compact>
+          ) : (
+            <h1
+              onClick={() => setShowTitleInput(true)}
+              style={{ fontSize: 40, fontWeight: "bold", cursor: "pointer" }}
+            >
+              {systemTitle || ""}
+            </h1>
+          )}
           <div>Updated (loc. time): {hardCodeSystem?.last_update}</div>
         </div>
 
