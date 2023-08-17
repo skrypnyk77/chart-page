@@ -94,20 +94,12 @@ const SingleSystem = observer(() => {
     {
       key: "1",
       label: "Battery vs Illum. (d)",
-      children: (
-        <CombineIlluminationDurationAndBatteryLevelPerDay
-          params={customPerDayParams}
-        />
-      ),
+      children: <Test params={customPerDayParams} />,
     },
     {
       key: "2",
       label: "Battery vs Illum. (h)",
-      children: (
-        <CombineIlluminationDurationAndBatteryLevelPerHour
-          params={customPerHourParams}
-        />
-      ),
+      children: <Test params={customPerHourParams} />,
     },
     {
       key: "3",
@@ -129,18 +121,26 @@ const SingleSystem = observer(() => {
       label: "Online (h)",
       children: <OnlineDevices params={customPerHourParams} />,
     },
+    // {
+    //   key: "7",
+    //   label: "Battery vs Illum. (d)",
+    //   children: (
+    //     <CombineIlluminationDurationAndBatteryLevelPerDay
+    //       params={customPerDayParams}
+    //     />
+    //   ),
+    // },
+    // {
+    //   key: "8",
+    //   label: "Battery vs Illum. (h)",
+    //   children: (
+    //     <CombineIlluminationDurationAndBatteryLevelPerHour
+    //       params={customPerHourParams}
+    //     />
+    //   ),
+    // },
     {
       key: "7",
-      label: "Battery vs Illum. multiple (d)",
-      children: <Test params={customPerDayParams} />,
-    },
-    {
-      key: "8",
-      label: "Battery vs Illum. multiple (h)",
-      children: <Test params={customPerHourParams} />,
-    },
-    {
-      key: "9",
       label: "Modes history",
       children: <ModesHistory system={id} />,
     },
@@ -171,7 +171,12 @@ const SingleSystem = observer(() => {
           {showTitleInput && isAdmin ? (
             <Space.Compact
               size="large"
-              style={{ width: 600, marginBottom: 40, display: 'flex', flexDirection: 'column' }}
+              style={{
+                width: 600,
+                marginBottom: 40,
+                display: "flex",
+                flexDirection: "column",
+              }}
             >
               <Space>
                 <Input
@@ -197,7 +202,11 @@ const SingleSystem = observer(() => {
           ) : (
             <h1
               onClick={() => setShowTitleInput(true)}
-              style={{ fontSize: 40, fontWeight: "bold", cursor: isAdmin ? "pointer" : 'text' }}
+              style={{
+                fontSize: 40,
+                fontWeight: "bold",
+                cursor: isAdmin ? "pointer" : "text",
+              }}
             >
               {systemTitle || ""}
             </h1>
