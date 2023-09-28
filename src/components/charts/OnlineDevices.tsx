@@ -50,6 +50,12 @@ export const OnlineDevices = observer(({ params }) => {
         fontSize: 12,
       },
     },
+    meta: {
+      value: {
+        min: 0,
+        max: 100,
+      },
+    },
     xAxis: {
       fontSize: 20,
       label: {
