@@ -177,6 +177,9 @@ const SystemsList = observer(() => {
                     {system?.last_update && (
                       <div style={{ marginTop: 16 }}>Updated: {system?.last_update}</div>
                     )}
+                    {system?.illumination && (
+                      <div>{system?.illumination}</div>
+                    )}
                   </div>
                 </Card>
               </Col>
