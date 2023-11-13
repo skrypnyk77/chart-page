@@ -278,11 +278,18 @@ const SingleSystem = observer(() => {
               style={{ marginRight: 10 }}
               icon={faTemperatureHalf}
               color={
-                hardCodeSystem?.temperature < 65
+                hardCodeSystem?.temperature <= 0 &&
+                hardCodeSystem?.temperature >= 75
                   ? "red"
-                  : hardCodeSystem?.temperature > 75
+                  : hardCodeSystem?.temperature >= 10 &&
+                    hardCodeSystem?.temperature <= 55
                   ? "green"
-                  : "orange"
+                  : (hardCodeSystem?.temperature > 0 &&
+                      hardCodeSystem?.temperature < 10) ||
+                    (hardCodeSystem?.temperature > 55 &&
+                      hardCodeSystem?.temperature < 75)
+                  ? "orange"
+                  : "red"
               }
             />{" "}
             Avg. Temperature Devices: {hardCodeSystem?.temperature}C

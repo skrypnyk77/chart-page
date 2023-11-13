@@ -59,17 +59,6 @@ class UserStore {
       this.isLogged = true;
       this.authError = "";
     } catch (error) {
-      console.log("error.message", error?.message);
-      console.log("error.status", error.response?.status);
-      console.log(
-        "error.response.data.message",
-        error?.response?.data?.message
-      );
-      console.log(
-        "error.response.data.error.message",
-        error?.response?.data?.error?.message
-      );
-
       this.isLogged = false;
       this.authError = error?.response?.data?.message;
     }

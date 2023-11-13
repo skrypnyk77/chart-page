@@ -19,26 +19,34 @@ export const apiClient = axios.create({
   },
 });
 
-apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const originalRequest = error.config;
+// apiClient.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     const originalRequest = error.config;
 
-    if (error.response.status === 401) {
-      if (originalRequest._retry) {
-        return Promise.reject(error);
-      }
+//     if (error.response.status === 401) {
+//       if (originalRequest._retry) {
+//         return Promise.reject(error);
+//       }
 
-      originalRequest._retry = true;
+//       originalRequest._retry = true;
 
-      return axios.post("/api/token/refresh", {}).then((res) => {
-        if (res.status >= 200 && res.status < 300) {
-          return axios(originalRequest);
-        }
-      });
-    }
-  }
-);
+//       console.log("axios", axios);
+
+//       return axios
+//         .post("token/refresh", {})
+//         .then((res) => {
+//           console.log("res", res);
+//           console.log("originalRequest", originalRequest);
+
+//           if (res.status >= 200 && res.status < 300) {
+//             return axios(originalRequest);
+//           }
+//         })
+//         .catch((error) => console.log(error));
+//     }
+//   }
+// );
 
 // admin
 // Qwerty123
