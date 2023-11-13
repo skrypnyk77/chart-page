@@ -43,7 +43,7 @@ class UserStore {
       const data = await api.getUsersMe();
 
       if (data.roles?.includes("ROLE_ADMIN")) {
-        this.isAdmin = true
+        this.isAdmin = true;
       }
 
       this.user = data;
@@ -54,15 +54,24 @@ class UserStore {
 
   login = async (params: any): Promise<void> => {
     try {
-      const data = await api.login(params);
+      await api.login(params);
 
       this.isLogged = true;
       this.authError = "";
     } catch (error) {
-      console.error(error.response.data.message);
+      console.log("error.message", error?.message);
+      console.log("error.status", error.response?.status);
+      console.log(
+        "error.response.data.message",
+        error?.response?.data?.message
+      );
+      console.log(
+        "error.response.data.error.message",
+        error?.response?.data?.error?.message
+      );
 
       this.isLogged = false;
-      this.authError = error.response.data.message;
+      this.authError = error?.response?.data?.message;
     }
   };
 

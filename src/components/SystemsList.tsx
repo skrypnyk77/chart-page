@@ -155,11 +155,13 @@ const SystemsList = observer(() => {
                         style={{ marginRight: 17 }}
                         icon={faTemperatureHalf}
                         color={
-                          system?.temperature < 65
+                          (system?.temperature <= 0 && system?.temperature >= 75)
                             ? "red"
-                            : system?.temperature > 75
+                            : (system?.temperature >= 10 && system?.temperature <= 55)
                             ? "green"
-                            : "orange"
+                            : (system?.temperature > 0 && system?.temperature < 10) || (system?.temperature > 55 && system?.temperature < 75) 
+                            ? "orange"
+                            : "red"
                         }
                       />{" "}
                       Avg. Temperature Devices: {system?.temperature}C
