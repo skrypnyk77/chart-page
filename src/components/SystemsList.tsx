@@ -87,7 +87,6 @@ const SystemsList = observer(() => {
                     minHeight: 210,
                     fontSize: 13,
                     overflow: 'hidden', 
-                    whiteSpace: 'nowrap', 
                     textOverflow: 'ellipsis'
                   }}
                 >
