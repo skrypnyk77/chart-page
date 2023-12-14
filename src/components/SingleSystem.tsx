@@ -10,6 +10,8 @@ import { Temperature } from "./charts/Temperature";
 import { OnlineDevices } from "./charts/OnlineDevices";
 import { Test } from "../components/charts/Test";
 import { ModesHistory } from "../components/charts/ModesHistory";
+import { NotificationsHistory } from "../components/charts/NotificationsHistory";
+import { ExportHistory } from "../components/charts/ExportHistory";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -143,6 +145,16 @@ const SingleSystem = observer(() => {
       key: "7",
       label: "Modes history",
       children: <ModesHistory system={id} />,
+    },
+    {
+      key: "8",
+      label: "Notifications",
+      children: <NotificationsHistory system={id} />,
+    },
+    {
+      key: "9",
+      label: "Export ",
+      children: <ExportHistory system={id} />,
     },
   ];
 
