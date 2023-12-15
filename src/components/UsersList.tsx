@@ -36,9 +36,10 @@ interface Item {
   id: number;
   login: string;
   modified_at: string;
+  password: string | undefined;
   roles: string[];
   name: string;
-  note: string;
+  note: string | undefined;
 }
 
 const UsersList = observer(() => {
@@ -58,19 +59,21 @@ const UsersList = observer(() => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [initialValues, setInitialValues] = useState({});
 
   const onFinish = async (values: any) => {
     console.log("Success:", values);
-
+  
     const available_systems = [];
 
     if (!editMode) {
-      values.available_systems.forEach((system) =>
+      values.available_systems?.forEach((system) =>
         available_systems.push(`/api/systems/${system}`)
       );
     } else {
-      values.available_systems.forEach((system) => {
+      values.available_systems?.forEach((system) => {
         if (system?.value) {
           available_systems.push(`/api/systems/${system.value}`);
         } else {
@@ -84,6 +87,7 @@ const UsersList = observer(() => {
           ...values,
           available_systems: available_systems,
           id: initialValues.id,
+          confirmPassword: undefined
         })
       : await asyncCreateUser({
           ...values,
@@ -95,6 +99,8 @@ const UsersList = observer(() => {
     setKey(key + 1);
 
     setIsModalOpen(false);
+
+    setShowConfirmPassword(false);
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -215,13 +221,13 @@ const UsersList = observer(() => {
         return record.roles?.join(", ");
       },
     },
-    { 
+    {
       title: "Note",
       dataIndex: "note",
       key: "note",
       editable: false,
       render: (_: any, record: Item) => {
-        return record.note || '-'
+        return record.note || "-";
       },
     },
     {
@@ -263,9 +269,9 @@ const UsersList = observer(() => {
                 setInitialValues({
                   id: record.id,
                   login: record.login,
-                  password: "",
+                  password: record.password,
                   name: record.name,
-                  note: "",
+                  note: record.note,
                   roles: record.roles,
                   available_systems: available_systems,
                 });
@@ -309,6 +315,7 @@ const UsersList = observer(() => {
           Create User
         </Button>
         <Modal
+          width={600}
           title={editMode ? "Edit User" : "Create User"}
           open={isModalOpen}
           onCancel={() => {
@@ -334,19 +341,48 @@ const UsersList = observer(() => {
             <Form.Item
               label="Login"
               name="login"
-              rules={[{ required: true, message: "Please input login!" }]}
+              rules={[
+                { required: true, message: "Please input login!" },
+                { min: 3 },
+                {
+                  pattern: new RegExp(/^[a-zA-Z0-9]*$/),
+                  message: "No space or special characters allowed",
+                },
+              ]}
             >
               <Input placeholder="Enter Login" />
             </Form.Item>
-
             <Form.Item
               label="Password"
               name="password"
               rules={[{ required: true, message: "Please input password!" }]}
             >
-              <Input.Password placeholder="Enter Password" />
+              <Input.Password
+                placeholder="Enter Password"
+                onChange={() => setShowConfirmPassword(true)}
+              />
             </Form.Item>
-
+            {editMode && showConfirmPassword && (
+              <Form.Item
+                label="Confirm Password"
+                name="confirmPassword"
+                rules={[
+                  { required: true, message: "Please input confirm password!" },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error("The password confirmation does not match.")
+                      );
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password placeholder="Enter Confirm Password" />
+              </Form.Item>
+            )}
             <Form.Item
               label="Name"
               name="name"
@@ -354,11 +390,9 @@ const UsersList = observer(() => {
             >
               <Input placeholder="Enter Name" />
             </Form.Item>
-
             <Form.Item label="Note" name="note">
               <Input placeholder="Enter Note" />
             </Form.Item>
-
             <Form.Item label="Roles" name="roles">
               <Select
                 showSearch={false}
@@ -371,7 +405,6 @@ const UsersList = observer(() => {
                 ]}
               />
             </Form.Item>
-
             <Form.Item label="Systems" name="available_systems">
               <Select
                 placeholder="Select System(s)"
@@ -382,10 +415,9 @@ const UsersList = observer(() => {
                 options={systemsOptions}
               />
             </Form.Item>
-
             <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
               <Button type="primary" htmlType="submit" loading={isLoading}>
-                {editMode ? "Edit" : "Create"}
+                {editMode ? "Save" : "Create"}
               </Button>
             </Form.Item>
           </Form>
