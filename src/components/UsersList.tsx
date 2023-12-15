@@ -215,6 +215,15 @@ const UsersList = observer(() => {
         return record.roles?.join(", ");
       },
     },
+    { 
+      title: "Note",
+      dataIndex: "note",
+      key: "note",
+      editable: false,
+      render: (_: any, record: Item) => {
+        return record.note || '-'
+      },
+    },
     {
       title: "Available Systems",
       dataIndex: "available_systems",
