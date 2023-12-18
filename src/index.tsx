@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { jwtDecode } from "jwt-decode";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 
 import { Provider, observer } from "mobx-react";
@@ -15,13 +16,34 @@ import UsersList from "./components/UsersList";
 import SingleSystem from "./components/SingleSystem";
 import Profile from "./components/Profile";
 import Sidebar from "./components/Sidebar";
+import { useEffect } from "react";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const App = observer(() => {
   const {
-    userStore: { isLogged, isAdmin },
+    userStore: { isLogged, isAdmin, login },
   } = useStores();
+
+  // useEffect(() => {
+  //   async function checkLogin() {
+  //     const token = localStorage.getItem("token");
+  
+  //     if (token) {
+  //       const decodedToken = jwtDecode(token);
+    
+  //       console.log("decodedToken", decodedToken);
+  //       // console.log("refreshToken", decodedRefreshToken);
+
+  //       // await login({
+  //       //   login: "admin",
+  //       //   password: "Qwerty123",
+  //       // });
+  //     }
+  //   }
+
+  //   checkLogin();
+  // }, []);
 
   return (
     <div

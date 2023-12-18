@@ -54,21 +54,25 @@ class UserStore {
 
   login = async (params: any): Promise<void> => {
     try {
-      await api.login(params);
+      const response = await api.login(params);
 
       this.isLogged = true;
       this.authError = "";
+
+      localStorage.setItem('token', response.token)
     } catch (error) {
       this.isLogged = false;
       this.authError = error?.response?.data?.message;
     }
   };
 
-  logout = async (): Promise<void> => {
+  logout = async (): Promise<void> => {  
     try {
       await api.logout();
 
       this.isLogged = false;
+
+      localStorage.removeItem('token')
     } catch (error) {
       console.error(error.response.data.message);
     }

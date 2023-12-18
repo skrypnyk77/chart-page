@@ -98,7 +98,7 @@ const SystemsList = observer(() => {
                       />{" "}
                       Online Devices: {system?.devices}%
                     </div>
-                    {system?.ps_battery <= 1200 && (
+                    {system?.ps_battery <= 1250 && (
                       <div>
                         <div>
                           <FontAwesomeIcon
@@ -106,8 +106,8 @@ const SystemsList = observer(() => {
                             style={{ marginRight: 10 }}
                           />{" "}
                           Backup battery:{"  "}
-                          {system.ps_battery >= 1025 &&
-                          system.ps_battery <= 1200
+                          {system.ps_battery >= 1050 &&
+                          system.ps_battery <= 1250
                             ? "OK"
                             : "CRITICAL"}
                         </div>
