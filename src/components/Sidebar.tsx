@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   HomeOutlined,
   UserOutlined,
@@ -36,6 +36,12 @@ const Sidebar: React.FC = () => {
     userStore: { isAdmin },
   } = useStores();
 
+  const splittedPathname = window.location.pathname?.split("/");
+
+  const [current, setCurrent] = useState(
+    splittedPathname[splittedPathname.length - 1]
+  );
+
   const items: MenuProps["items"] = [
     getItem("Dashboard", "dashboard", <HomeOutlined />),
     getItem("Profile", "profile", <UserOutlined />),
@@ -44,6 +50,8 @@ const Sidebar: React.FC = () => {
 
   const onClick: MenuProps["onClick"] = (e) => {
     navigate(`/charts/${e.key}`);
+
+    setCurrent(e.key);
   };
 
   return (
@@ -66,7 +74,7 @@ const Sidebar: React.FC = () => {
       </div>
       <Menu
         onClick={onClick}
-        defaultSelectedKeys={["dashboard"]}
+        selectedKeys={[current]}
         mode="inline"
         items={items}
       />

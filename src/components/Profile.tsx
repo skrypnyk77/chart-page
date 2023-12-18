@@ -83,7 +83,7 @@ const Profile = observer(() => {
       </Modal>
 
       <Card
-        title={user.name}
+        title={user?.name}
         extra={
           <Button
             onClick={() => setShowChangePasswordModal(true)}
@@ -95,16 +95,16 @@ const Profile = observer(() => {
       >
         <p>
           <strong style={{ marginRight: 10 }}>Login:</strong>
-          {user.login}
+          {user?.login}
         </p>
         <p>
           <strong style={{ marginRight: 10 }}>Roles:</strong>
-          {user.roles.join(", ")}
+          {user?.roles?.join(", ")}
         </p>
         <p>
           <strong style={{ marginRight: 10 }}>Available Systems:</strong>
-          {user.available_systems.length > 0
-            ? user.available_systems.map((item) => {
+          {user?.available_systems?.length > 0
+            ? user?.available_systems?.map((item) => {
                 return `${item.name}, `;
               })
             : "-"}

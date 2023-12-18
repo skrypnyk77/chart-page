@@ -234,7 +234,7 @@ const SingleSystem = observer(() => {
             />{" "}
             Online Devices: {hardCodeSystem?.devices}%
           </div>
-          {hardCodeSystem?.ps_battery <= 1200 && (
+          {hardCodeSystem?.ps_battery <= 1250 && (
             <div>
               <div style={{ marginRight: 30 }}>
                 <FontAwesomeIcon
@@ -242,8 +242,8 @@ const SingleSystem = observer(() => {
                   style={{ marginRight: 10 }}
                 />{" "}
                 Backup battery:{"  "}
-                {hardCodeSystem.ps_battery >= 1025 &&
-                hardCodeSystem.ps_battery <= 1200
+                {hardCodeSystem.ps_battery >= 1050 &&
+                hardCodeSystem.ps_battery <= 1250
                   ? "OK"
                   : "CRITICAL"}
               </div>

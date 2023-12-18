@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { jwtDecode } from "jwt-decode";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
@@ -16,34 +16,29 @@ import UsersList from "./components/UsersList";
 import SingleSystem from "./components/SingleSystem";
 import Profile from "./components/Profile";
 import Sidebar from "./components/Sidebar";
-import { useEffect } from "react";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-const App = observer(() => {
+const RouterComponent = observer(() => {
   const {
-    userStore: { isLogged, isAdmin, login },
+    userStore: { isLogged, isAdmin, updateUser },
   } = useStores();
 
-  // useEffect(() => {
-  //   async function checkLogin() {
-  //     const token = localStorage.getItem("token");
-  
-  //     if (token) {
-  //       const decodedToken = jwtDecode(token);
-    
-  //       console.log("decodedToken", decodedToken);
-  //       // console.log("refreshToken", decodedRefreshToken);
+  const token = localStorage.getItem("token");
 
-  //       // await login({
-  //       //   login: "admin",
-  //       //   password: "Qwerty123",
-  //       // });
-  //     }
-  //   }
+  useEffect(() => {
+    async function checkLogin() {
+      const token = localStorage.getItem("token");
 
-  //   checkLogin();
-  // }, []);
+      if (token) {
+        updateUser(true);
+      }
+    }
+
+    checkLogin();
+  }, []);
+
+  console.log("isLogged", isLogged);
 
   return (
     <div
@@ -54,7 +49,7 @@ const App = observer(() => {
         paddingLeft: 220,
       }}
     >
-      <BrowserRouter>
+      <>
         {isLogged && <Sidebar />}
 
         <Routes>
@@ -68,23 +63,31 @@ const App = observer(() => {
             </>
           ) : (
             <>
-              <Route path="/charts/dashboard" element={<SystemsList />} />
-              <Route path="/charts/profile" element={<Profile />} />
-              <Route path="/charts/dashboard/:id" element={<SingleSystem />} />
               <Route
                 path="*"
                 element={<Navigate to="/charts/dashboard" replace />}
               />
+              <Route path="/charts/dashboard" element={<SystemsList />} />
+              <Route path="/charts/profile" element={<Profile />} />
+              <Route path="/charts/dashboard/:id" element={<SingleSystem />} />
               {isAdmin && (
                 <Route path="/charts/users" element={<UsersList />} />
               )}
             </>
           )}
         </Routes>
-      </BrowserRouter>
+      </>
     </div>
   );
 });
+
+function App() {
+  return (
+    <BrowserRouter>
+      <RouterComponent />
+    </BrowserRouter>
+  );
+}
 
 root.render(
   <Provider store={store}>

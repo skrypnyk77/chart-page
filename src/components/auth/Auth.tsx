@@ -19,7 +19,7 @@ const Auth = observer(() => {
   const onFinish = async (values: any): Promise<void> => {
     await login({ ...values });
 
-    navigate(`/charts/systems`);
+    navigate(`/charts/dashboard`);
   };
 
   return (
