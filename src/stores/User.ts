@@ -49,7 +49,7 @@ class UserStore {
 
       this.user = data;
     } catch (error) {
-      if (error.response.data.code === 401) {
+      if (error.response.status === 401) {
         this.logout();
       }
 
@@ -82,10 +82,12 @@ class UserStore {
       await api.logout();
 
       this.isLogged = false;
-
-      localStorage.removeItem("token");
     } catch (error) {
-      console.error(error.response.data.message);
+      console.error(error.response.status);
+    } finally {
+      localStorage.removeItem("token");
+
+      window.location.href = "/charts/login";
     }
   };
 }

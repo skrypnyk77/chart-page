@@ -133,7 +133,7 @@ const UsersList = observer(() => {
 
       console.log("users", users);
     } catch (error) {
-      console.log(error);
+      console.log(error.response.status);
     }
 
     setIsLoading(false);

@@ -42,10 +42,6 @@ class SystemsStore {
       this.systemsData = mapped;
     } catch (error) {
       console.warn(error);
-
-      if (error.response.data.code === 401) {
-        userStore.logout();
-      }
     }
 
     this.isLoading = false;
