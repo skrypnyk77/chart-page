@@ -360,7 +360,14 @@ const UsersList = observer(() => {
             <Form.Item
               label="Password"
               name="password"
-              rules={[{ required: true, message: "Please input password!" }]}
+              rules={[
+                { required: editMode ? false : true, message: "Please input password!" },
+                { min: 8 },
+                {
+                  pattern: new RegExp(/^[a-zA-Z0-9]*$/),
+                  message: "No space or special characters allowed",
+                },
+              ]}
             >
               <Input.Password
                 placeholder="Enter Password"
@@ -369,10 +376,15 @@ const UsersList = observer(() => {
             </Form.Item>
             {editMode && showConfirmPassword && (
               <Form.Item
-                label="Confirm Password"
+                label="Change Password"
                 name="confirmPassword"
                 rules={[
-                  { required: true, message: "Please input confirm password!" },
+                  { required: true, message: "Please confirm password!" },
+                  { min: 8 },
+                  {
+                    pattern: new RegExp(/^[a-zA-Z0-9]*$/),
+                    message: "No space or special characters allowed",
+                  },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
                       if (!value || getFieldValue("password") === value) {
