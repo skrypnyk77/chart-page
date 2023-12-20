@@ -1,4 +1,5 @@
 import api from "../data/groupsApi";
+import userStore from "./User";
 
 import { observable, makeObservable, action } from "mobx";
 
@@ -17,8 +18,12 @@ class GroupsStore {
       const data = await api.getGroups();
 
       this.groupsData = data;
-    } catch (err) {
-      console.warn(err);
+    } catch (error) {
+      console.warn(error);
+
+      if (error.response.data.code === 401) {
+        userStore.logout();
+      }
     }
   };
 }

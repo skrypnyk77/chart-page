@@ -1,4 +1,5 @@
 import api from "../data/systemsApi";
+import userStore from "./User";
 
 import { observable, makeObservable, action } from "mobx";
 
@@ -39,8 +40,12 @@ class SystemsStore {
       });
 
       this.systemsData = mapped;
-    } catch (err) {
-      console.warn(err);
+    } catch (error) {
+      console.warn(error);
+
+      if (error.response.data.code === 401) {
+        userStore.logout();
+      }
     }
 
     this.isLoading = false;

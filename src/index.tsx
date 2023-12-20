@@ -21,17 +21,15 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const RouterComponent = observer(() => {
   const {
-    userStore: { isLogged, isAdmin, updateUser },
+    userStore: { isLogged, isAdmin, updateUserLogged },
   } = useStores();
-
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
     async function checkLogin() {
       const token = localStorage.getItem("token");
 
       if (token) {
-        updateUser(true);
+        updateUserLogged(true);
       }
     }
 

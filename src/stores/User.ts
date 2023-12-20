@@ -32,7 +32,7 @@ class UserStore {
       isLogged: observable,
       user: observable,
       isAdmin: observable,
-      updateUser: action,
+      updateUserLogged: action,
       getMe: action,
       login: action,
       logout: action,
@@ -49,11 +49,15 @@ class UserStore {
 
       this.user = data;
     } catch (error) {
+      if (error.response.data.code === 401) {
+        this.logout();
+      }
+
       console.error(error.response.data.message);
     }
   };
 
-  updateUser = async (isLogged: boolean): Promise<void> => {
+  updateUserLogged = async (isLogged: boolean): Promise<void> => {
     this.isLogged = isLogged;
 
     await this.getMe();
