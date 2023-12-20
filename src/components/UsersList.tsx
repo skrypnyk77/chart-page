@@ -45,6 +45,7 @@ interface Item {
 const UsersList = observer(() => {
   const {
     systemsStore: { systemsData },
+    userStore: { logout },
   } = useStores();
 
   const systemsOptions = systemsData.map((item) => {
@@ -65,7 +66,7 @@ const UsersList = observer(() => {
 
   const onFinish = async (values: any) => {
     console.log("Success:", values);
-  
+
     const available_systems = [];
 
     if (!editMode) {
@@ -87,7 +88,7 @@ const UsersList = observer(() => {
           ...values,
           available_systems: available_systems,
           id: initialValues.id,
-          confirmPassword: undefined
+          confirmPassword: undefined,
         })
       : await asyncCreateUser({
           ...values,
@@ -134,6 +135,10 @@ const UsersList = observer(() => {
       console.log("users", users);
     } catch (error) {
       console.log(error.response.status);
+
+      if (error.response.status === 401) {
+        logout();
+      }
     }
 
     setIsLoading(false);
