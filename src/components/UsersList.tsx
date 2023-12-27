@@ -320,6 +320,7 @@ const UsersList = observer(() => {
           Create User
         </Button>
         <Modal
+          key={key}
           width={600}
           title={editMode ? "Edit User" : "Create User"}
           open={isModalOpen}
@@ -329,6 +330,8 @@ const UsersList = observer(() => {
             setKey(key + 1);
 
             setIsModalOpen(false);
+
+            setShowConfirmPassword(false);
           }}
           footer={null}
         >
@@ -361,17 +364,22 @@ const UsersList = observer(() => {
               label="Password"
               name="password"
               rules={[
-                { required: editMode ? false : true, message: "Please input password!" },
+                {
+                  required: editMode ? false : true,
+                  message: "Please input password!",
+                },
                 { min: 8 },
                 {
-                  pattern: new RegExp(/^[a-zA-Z0-9]*$/),
-                  message: "No space or special characters allowed",
+                  pattern: new RegExp(/^\S+$/),
+                  message: "No space allowed",
                 },
               ]}
             >
               <Input.Password
                 placeholder="Enter Password"
-                onChange={() => setShowConfirmPassword(true)}
+                onChange={(e) => {
+                  setShowConfirmPassword(e.target.value ? true : false);
+                }}
               />
             </Form.Item>
             {editMode && showConfirmPassword && (
@@ -382,12 +390,12 @@ const UsersList = observer(() => {
                   { required: true, message: "Please confirm password!" },
                   { min: 8 },
                   {
-                    pattern: new RegExp(/^[a-zA-Z0-9]*$/),
-                    message: "No space or special characters allowed",
+                    pattern: new RegExp(/^\S+$/),
+                    message: "No space allowed",
                   },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
-                      if (!value || getFieldValue("password") === value) {
+                      if (getFieldValue("password") === value) {
                         return Promise.resolve();
                       }
                       return Promise.reject(
