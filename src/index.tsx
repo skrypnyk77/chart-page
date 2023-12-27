@@ -36,8 +36,6 @@ const RouterComponent = observer(() => {
     checkLogin();
   }, []);
 
-  console.log("isLogged", isLogged);
-
   return (
     <div
       style={{

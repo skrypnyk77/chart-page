@@ -31,7 +31,7 @@ const Profile = observer(() => {
 
     console.log(values);
 
-    await userApi.updateUser({ ...values, id: user.id });
+    await userApi.updateUser({ ...values, confirmPassword: undefined, id: user.id });
 
     await getMe();
 
@@ -49,18 +49,22 @@ const Profile = observer(() => {
   return (
     <Layout style={{ padding: 20 }}>
       {contextHolder}
-      
+
       <Modal
-        title="Create User"
+        width={640}
+        title="Change password"
         open={showChangePasswordModal}
-        onCancel={() => setShowChangePasswordModal(false)}
+        onCancel={() => {
+          setKey(key + 1);
+          setShowChangePasswordModal(false);
+        }}
         footer={null}
       >
         <Form
           key={key}
           name="basic"
-          labelCol={{ span: 6 }}
-          wrapperCol={{ span: 18 }}
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
           style={{ maxWidth: 600 }}
           initialValues={{ remember: true }}
           onFinish={onFinish}
@@ -70,10 +74,43 @@ const Profile = observer(() => {
           <Form.Item
             label="Password"
             name="password"
-            rules={[{ required: true, message: "Please input password!" }]}
+            rules={[
+              { required: true, message: "Please input password!" },
+              { min: 8 },
+              {
+                pattern: new RegExp(/^\S+$/),
+                message: "No space allowed",
+              },
+            ]}
           >
             <Input.Password placeholder="Enter Password" />
           </Form.Item>
+
+          <Form.Item
+            label="Repeat new password"
+            name="confirmPassword"
+            rules={[
+              { required: true, message: "Please input password!" },
+              { min: 8 },
+              {
+                pattern: new RegExp(/^\S+$/),
+                message: "No space allowed",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("The password confirmation does not match.")
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="Enter Password" />
+          </Form.Item>
+
           <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
             <Button type="primary" htmlType="submit">
               Change
