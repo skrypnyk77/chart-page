@@ -99,7 +99,7 @@ export const Test = observer(({ params }) => {
         text: params.detalization === "1d" ? "Date" : "Datetime",
         position: "start",
         style: {
-          fontSize: 16,
+          fontSize: 15,
         },
       },
     },
@@ -117,7 +117,7 @@ export const Test = observer(({ params }) => {
               ? "Duration in hours"
               : "Duration in minutes",
           style: {
-            fontSize: 16,
+            fontSize: 15,
           },
         },
       },
@@ -125,7 +125,7 @@ export const Test = observer(({ params }) => {
         title: {
           text: "Battery level in %",
           style: {
-            fontSize: 16,
+            fontSize: 15,
           },
         },
       },

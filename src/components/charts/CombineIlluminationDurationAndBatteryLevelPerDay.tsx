@@ -98,7 +98,7 @@ export const CombineIlluminationDurationAndBatteryLevelPerDay = observer(
           title: {
             text: "Time in hours",
             style: {
-              fontSize: 16,
+              fontSize: 15,
             },
           },
         },
@@ -106,7 +106,7 @@ export const CombineIlluminationDurationAndBatteryLevelPerDay = observer(
           title: {
             text: "Battery level in %",
             style: {
-              fontSize: 16,
+              fontSize: 15,
             },
           },
         },

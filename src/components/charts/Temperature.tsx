@@ -83,7 +83,7 @@ export const Temperature = observer(({ params }) => {
         text: params.detalization === "1d" ? "Date" : "Datetime",
         position: "start",
         style: {
-          fontSize: 16,
+          fontSize: 15,
         },
       },
     },
@@ -98,7 +98,6 @@ export const Temperature = observer(({ params }) => {
           </div>`,
       },
     ],
-    padding: "auto", //
   };
 
   const onChange: DatePickerProps["onChange"] = async (date) => {
