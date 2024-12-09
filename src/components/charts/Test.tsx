@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react";
-
 import batteryApi from "../../data/batteryApi";
 import illuminationApi from "../../data/illuminationApi";
 

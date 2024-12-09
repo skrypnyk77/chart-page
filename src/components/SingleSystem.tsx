@@ -12,6 +12,7 @@ import { Test } from "../components/charts/Test";
 import { ModesHistory } from "../components/charts/ModesHistory";
 import { NotificationsHistory } from "../components/charts/NotificationsHistory";
 import { ExportHistory } from "../components/charts/ExportHistory";
+import { RenameGroups } from "../components/charts/RenameGroups";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -153,8 +154,13 @@ const SingleSystem = observer(() => {
     },
     {
       key: "9",
-      label: "Export ",
+      label: "Export",
       children: <ExportHistory system={id} />,
+    },
+    {
+      key: "10",
+      label: "Rename Groups",
+      children: <RenameGroups system={id} />,
     },
   ];
 
