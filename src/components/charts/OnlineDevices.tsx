@@ -42,10 +42,10 @@ export const OnlineDevices = observer(({ params }) => {
     xField: "date",
     yField: "value",
     columnWidthRatio: 0.8,
-    label: params.detalization === '1d' && {
-      position: 'top',
+    label: params.detalization === "1d" && {
+      position: "top",
       style: {
-        fill: '#000000',
+        fill: "#000000",
         opacity: 0.6,
         fontSize: 12,
       },
@@ -73,7 +73,7 @@ export const OnlineDevices = observer(({ params }) => {
           }
         },
         style: {
-          fontSize: params.detalization === '1d' ? 12 : 8,
+          fontSize: params.detalization === "1d" ? 14 : 8,
           textAlign: "right",
           textBaseline: "middle",
         },
@@ -83,6 +83,13 @@ export const OnlineDevices = observer(({ params }) => {
         autoEllipsis: false,
       },
       tickCount: onlineDevices.length,
+      title: {
+        text: params.detalization === "1d" ? "Date" : "Datetime",
+        position: "start",
+        style: {
+          fontSize: 16,
+        },
+      },
     },
   };
 

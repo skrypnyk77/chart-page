@@ -69,7 +69,7 @@ export const Temperature = observer(({ params }) => {
           }
         },
         style: {
-          fontSize: params.detalization === "1d" ? 12 : 8,
+          fontSize: params.detalization === "1d" ? 14 : 8,
           textAlign: "right",
           textBaseline: "middle",
         },
@@ -79,6 +79,13 @@ export const Temperature = observer(({ params }) => {
         autoEllipsis: false,
       },
       tickCount: temperature.length,
+      title: {
+        text: params.detalization === "1d" ? "Date" : "Datetime",
+        position: "start",
+        style: {
+          fontSize: 16,
+        },
+      },
     },
   };
 

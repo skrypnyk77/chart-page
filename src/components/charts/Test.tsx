@@ -85,7 +85,7 @@ export const Test = observer(({ params }) => {
           }
         },
         style: {
-          fontSize: 8,
+          fontSize: params.detalization === "1d" ? 14 : 8,
           textAlign: "right",
           textBaseline: "middle",
         },
@@ -95,6 +95,13 @@ export const Test = observer(({ params }) => {
         autoEllipsis: false,
       },
       tickCount: illuminationDuration.length,
+      title: {
+        text: params.detalization === "1d" ? "Date" : "Datetime",
+        position: "start",
+        style: {
+          fontSize: 16,
+        },
+      },
     },
     meta: {
       battery: {
