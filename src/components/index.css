@@ -1,7 +1,7 @@
 .ant-tabs-tab {
-    margin-left: 16px;
+  margin: 0 0 0 30px;
 }
 
 .ant-tabs-tab:first-child {
-    margin-left: 0;
+  margin-left: 0;
 }

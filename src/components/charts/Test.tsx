@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react";
+
 import batteryApi from "../../data/batteryApi";
 import illuminationApi from "../../data/illuminationApi";
 
@@ -122,13 +123,29 @@ export const Test = observer(({ params }) => {
       },
       battery: {
         title: {
-          text: "Battery level in %",
+          text: "",
           style: {
             fontSize: 15,
+            color: "",
           },
         },
       },
     },
+    annotations: {
+      battery: [
+        {
+          type: "html",
+          position: ["97%", "50%"],
+          html: `
+            <div style="display: flex; align-items: center; font-size: 15px; width: 150px;  color: rgb(89, 89, 89); transform: rotate(-90deg);">
+            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="battery-full" class="svg-inline--fa fa-battery-full " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" color="rgb(89, 89, 89)" style="margin-right: 10px;"><path fill="currentColor" d="M464 160c8.8 0 16 7.2 16 16V336c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V176c0-8.8 7.2-16 16-16H464zM80 96C35.8 96 0 131.8 0 176V336c0 44.2 35.8 80 80 80H464c44.2 0 80-35.8 80-80V320c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32V176c0-44.2-35.8-80-80-80H80zm368 96H96V320H448V192z"></path></svg>
+              <span>Battery level in %</span>
+            </div>`,
+        },
+      ],
+    },
+
+    padding: "auto", // Ensure space for annotation
   };
 
   const onChange: DatePickerProps["onChange"] = async (date) => {

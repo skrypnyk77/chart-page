@@ -4,8 +4,8 @@ import { useParams } from "react-router-dom";
 import systemsApi from "../data/systemsApi";
 import { useStores } from "../use-stores";
 
-import { CombineIlluminationDurationAndBatteryLevelPerDay } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerDay";
-import { CombineIlluminationDurationAndBatteryLevelPerHour } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerHour";
+// import { CombineIlluminationDurationAndBatteryLevelPerDay } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerDay";
+// import { CombineIlluminationDurationAndBatteryLevelPerHour } from "../components/charts/CombineIlluminationDurationAndBatteryLevelPerHour";
 import { Temperature } from "./charts/Temperature";
 import { OnlineDevices } from "./charts/OnlineDevices";
 import { Test } from "../components/charts/Test";
