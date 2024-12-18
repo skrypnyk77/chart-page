@@ -5,3 +5,29 @@
 .ant-tabs-tab:first-child {
   margin-left: 0;
 }
+
+.graph-wrapper {
+  padding-left: 30px;
+  padding-right: 30px;
+  position: relative;
+}
+
+.graph-wrapper__label {
+  position: absolute;
+  top: calc(50% - 50px);
+  font-size: 15px;
+  color: rgb(89, 89, 89);
+  transform: rotate(-90deg);
+}
+
+.graph-wrapper__label svg {
+  margin-right: 8px;
+}
+
+.graph-wrapper__label._left {
+  left: -58px;
+}
+
+.graph-wrapper__label._right {
+  right: -50px;
+}
