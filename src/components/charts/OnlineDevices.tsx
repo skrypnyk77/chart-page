@@ -94,6 +94,7 @@ export const OnlineDevices = observer(({ params }) => {
         },
       },
     },
+    appendPadding: [24, 0, 0, 0],
   };
 
   const onChange: DatePickerProps["onChange"] = async (date) => {
